@@ -11,7 +11,7 @@ import org.example.webshopbackend.dto.UserDTO;
 @Table(name= "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="name")
