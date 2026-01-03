@@ -1,0 +1,78 @@
+.container {
+    /* max-width: 1100px; */
+    margin: 0 auto;
+    padding: 20px;
+    background: url("https://t3.ftcdn.net/jpg/02/16/60/42/360_F_216604243_4yvQhIudgknAWu04Ob7aSOu6BdIfhBNb.jpg") no-repeat center/cover;
+}
+
+.vehicles {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 60%;
+}
+
+.vehicle {
+    display: flex;
+    gap: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.image {
+    flex: 0 0 50%; 
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.description {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.description h1 {
+    margin: 0 0 10px;
+    font-size: 24px;
+}
+
+.description p {
+    color: #555;
+    line-height: 1.5;
+}
+
+.price {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.price h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #2c3e50;
+}
+
+button {
+    align-self: flex-start;
+    padding: 10px 20px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    /* transition: background 0.3s ease; */
+}
+
+button:hover {
+    background: #0056b3;
+}

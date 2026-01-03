@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginDetails } from '../models/login-details.model';
 import { Observable } from 'rxjs';
@@ -17,5 +17,15 @@ export class AuthService {
   
   public register(user: User) : Observable<User> {
     return this.http.post<User>("http://localhost:8080/user/register", user);
+  }
+
+  public getToken() : string {
+    return localStorage.getItem("ws_token") || "";
+  }
+
+  public getHeaderToken() : HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}` 
+    });
   }
 }

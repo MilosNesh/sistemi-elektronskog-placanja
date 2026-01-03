@@ -47,8 +47,8 @@ export class LoginComponent {
     this.recoveryMessage = ""
     this.authService.login(loginDetails).subscribe({
       next: (res) => {
-        // localStorage.setItem("ws_token", res);
-        alert("Logged in: " + res)
+        localStorage.setItem("ws_token", res);
+        this.router.navigate(["home"]);
       },
       error: (err: HttpErrorResponse) => {
         this.errorMessage = err.error?.message || "Greška prilikom prijave.";

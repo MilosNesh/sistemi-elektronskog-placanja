@@ -39,6 +39,15 @@ public class VehicleController {
         return ResponseEntity.ok(vehicles);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<VehicleDTO> getById(@PathVariable Long id) {
+        Vehicle vehicle = vehicleService.getById(id);
+        if (vehicle == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new VehicleDTO(vehicle));
+    }
+
     @GetMapping("/insurance/")
     public ResponseEntity<List<InsuranceDTO>> getAllInsurances() {
         List<InsuranceDTO> insurances = new ArrayList<>();
