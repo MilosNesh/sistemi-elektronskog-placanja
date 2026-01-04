@@ -6,6 +6,7 @@
 
     <div class="menu">
         <div *ngIf="token !== ''" class="menu-item"><a routerLink="home">Home</a></div>
+        <div *ngIf="token !== ''" class="menu-item"><a routerLink="reservations">Your reservations</a></div>
 
         <div *ngIf="token !== ''" class="logout-item">
             <a (click)="logout()">Logout</a>

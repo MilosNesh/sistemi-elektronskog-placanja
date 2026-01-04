@@ -33,4 +33,8 @@ export class VehicleService {
   public createReservation(reservation: Reservation) : Observable<Reservation> {
     return this.http.post<Reservation>("http://localhost:8080/vehicle/reservation/", reservation, { headers: this.authService.getHeaderToken() });
   }
+
+  public getReservations() : Observable<Reservation[]> {
+    return this.http.get<Reservation[]>("http://localhost:8080/vehicle/reservation/", { headers: this.authService.getHeaderToken() });
+  }
 }

@@ -85,4 +85,20 @@ public class VehicleController {
         }
         return ResponseEntity.ok(new ReservationDTO(reservation));
     }
+
+    @GetMapping("/reservation/")
+    public ResponseEntity<List<ReservationDTO>> getForUser() {
+        String email = (String) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        User user = userService.getByEmail(email);
+        List<Reservation> reservations =  reservationService.getForUser(user);
+        List<ReservationDTO> reservationDTOs = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            reservationDTOs.add(new ReservationDTO(reservation));
+        }
+        return ResponseEntity.ok(reservationDTOs);
+    }
 }

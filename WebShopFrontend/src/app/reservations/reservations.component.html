@@ -1,0 +1,23 @@
+<div class="container">
+    <div class="title">
+        <h1>Your reservation history and active reservation</h1>
+    </div>
+    <div class="reservations" *ngFor="let reservation of reservations">
+        <div class="reservation">
+            <div class="image">
+                <img [src]="reservation.vehicleDTO.image" alt="">
+            </div>
+            <div class="details">
+                <h1>{{reservation.vehicleDTO.model}}</h1>
+                <h3>Insurance: {{reservation.insuranceDTO?.name || "NO"}}</h3>
+                <h3>Additional service: </h3>
+                <h3 *ngFor="let service of reservation.additionalServiceDTOs">- {{service.name}}</h3>
+                <h3>Dates: {{formatDate(reservation.dateFrom)}} : {{formatDate(reservation.dateTo)}}</h3>
+                <h3>Total price: {{reservation.totalPrice}} {{reservation.currency}}</h3>
+                <div *ngIf="isActive(reservation)" class="status">
+                    <h4>Active</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -35,16 +35,16 @@ public class Reservation {
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Insurance insurance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Vehicle vehicle;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "reservation_additional_service",
             joinColumns = @JoinColumn(name = "reservation_id"),
