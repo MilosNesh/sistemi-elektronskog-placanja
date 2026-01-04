@@ -2,11 +2,11 @@
     <div class="vehicles">
         <div class="vehicle" *ngFor="let vehicle of vehicles">
             <div class="image">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e8/VW_Golf_II_front_20080206.jpg" alt="">
+                <img [src]="vehicle.image" alt="">
             </div>
             <div class="description">
                 <h1>{{vehicle.model}}</h1>
-                <p>{{vehicle.description}}</p>
+                <p>{{ vehicle.description | slice:0:150 }}...</p>
                 <div class="price">
                     <h2>{{vehicle.pricePerDay}}</h2>
                     <h2>{{vehicle.currency}}</h2>

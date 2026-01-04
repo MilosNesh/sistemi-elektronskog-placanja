@@ -23,7 +23,7 @@ public class Vehicle {
     @Column(name = "price_per_day")
     private double pricePerDay;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "currency")

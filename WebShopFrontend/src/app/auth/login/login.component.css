@@ -33,7 +33,7 @@ p {
 .container {
   position: relative;
   height: 100vh;
-  background: url('https://guidingmetrics.com/wp-content/uploads/2022/12/Rental-Car-Industry-3127x1344.jpg') center/cover no-repeat;
+  background: url('/assets/rentacarbg.jpg') center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;

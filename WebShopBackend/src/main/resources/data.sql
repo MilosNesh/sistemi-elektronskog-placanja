@@ -4,9 +4,9 @@ INSERT INTO users (name, surname, email, password) VALUES
 ('Nikola', 'Nikolic', 'nikola@gmail.com', '$2a$12$0CNp/4lKQAp9imFVF7layu6tSMC4u2jOLa.t0Vpg9h/f5GZwce5G6');
 
 INSERT INTO vehicles (model, image, price_per_day, description, currency) VALUES
-('Toyota Corolla', 'toyota_corolla.jpg', 3600.0, 'Compact and fuel efficient', 'RSD'),
-('BMW X5', 'bmw_x5.jpg', 2080.0, 'Luxury SUV with comfortable seating', 'RSD'),
-('Ford Fiesta', 'ford_fiesta.jpg', 2005.0, 'Small city car', 'RSD');
+('Toyota Corolla', 'assets/toyota_corolla.jpg', 3600.0, 'A reliable and fuel-efficient compact car, ideal for both daily commuting and longer trips. The Toyota Corolla offers a comfortable interior, smooth driving experience, and low fuel consumption, making it a perfect choice for city driving as well as highway journeys. Known for its durability and safety, it is an excellent option for drivers seeking practicality and dependability.', 'RSD'),
+('BMW X5', 'assets/bmw_x5.jpg', 2080.0, 'A luxury SUV that combines powerful performance, premium comfort, and modern design. The BMW X5 features a spacious cabin, high-quality materials, and advanced technology that enhance both safety and driving pleasure. It is ideal for families, business trips, or anyone looking for a prestigious and comfortable driving experience.', 'RSD'),
+('Ford Fiesta', 'assets/ford_fiesta.jpg', 2005.0, 'A compact city car designed for easy urban driving and convenient parking. The Ford Fiesta is known for its agile handling, economical fuel consumption, and practical interior layout. It is an excellent choice for drivers who want a reliable, efficient, and affordable vehicle for everyday city use.', 'RSD');
 
 INSERT INTO insurances (name, price_per_day, currency) VALUES
 ('Basic Insurance', 1550.0, 'RSD'),
