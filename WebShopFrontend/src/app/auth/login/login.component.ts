@@ -48,6 +48,7 @@ export class LoginComponent {
     this.authService.login(loginDetails).subscribe({
       next: (res) => {
         localStorage.setItem("ws_token", res);
+        this.authService.refreshToken();
         this.router.navigate(["home"]);
       },
       error: (err: HttpErrorResponse) => {

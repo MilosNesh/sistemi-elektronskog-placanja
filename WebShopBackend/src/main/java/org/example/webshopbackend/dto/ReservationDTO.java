@@ -10,13 +10,14 @@ import org.example.webshopbackend.domain.*;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationDTO {
-    private Long id;
+    private UUID id;
     private double totalPrice;
     private String currency;
     private Date dateFrom;

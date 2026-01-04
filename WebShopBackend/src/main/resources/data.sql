@@ -17,12 +17,12 @@ INSERT INTO additional_service (name, price, currency) VALUES
 ('GPS Navigation', 3.0, 'RSD'),
 ('Child Seat', 4.0, 'RSD'),
 ('Extra Driver', 6.0, 'RSD');
-
-INSERT INTO reservation (total_price, currency, date_from, date_to, payment_status, user_id, insurance_id) VALUES
-(50.0, 'RSD', '2026-01-10', '2026-01-12', 0, 1, 1),
-(200.0, 'RSD', '2026-01-15', '2026-01-20', 0, 1, 2);
-
-INSERT INTO reservation_additional_service (reservation_id, additional_service_id) VALUES
-(1, 1),
-(1, 2);
+--
+-- INSERT INTO reservation (total_price, currency, date_from, date_to, payment_status, user_id, insurance_id) VALUES
+-- (50.0, 'RSD', '2026-01-10', '2026-01-12', 0, 1, 1),
+-- (200.0, 'RSD', '2026-01-15', '2026-01-20', 0, 1, 2);
+--
+-- INSERT INTO reservation_additional_service (reservation_id, additional_service_id) VALUES
+-- (1, 1),
+-- (1, 2);
 
