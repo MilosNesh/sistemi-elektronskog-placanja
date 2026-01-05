@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class MerchantDTO {
     private Long merchantId;
-    private String merchantUsername;
+    private String merchantEmail;
     private String sellerUrl;
     private Integer port;
     private String successUrl;
@@ -23,7 +23,7 @@ public class MerchantDTO {
 
     public MerchantDTO(Merchant merchant) {
         this.merchantId = merchant.getMerchantId();
-        this.merchantUsername = merchant.getMerchantUsername();
+        this.merchantEmail = merchant.getMerchantEmail();
         this.sellerUrl = merchant.getSellerUrl();
         this.port = merchant.getPort();
         this.successUrl = merchant.getSuccessUrl();
@@ -36,8 +36,8 @@ public class MerchantDTO {
         return merchantId;
     }
 
-    public String getMerchantUsername() {
-        return merchantUsername;
+    public String getMerchantEmail() {
+        return merchantEmail;
     }
 
     public String getSellerUrl() {

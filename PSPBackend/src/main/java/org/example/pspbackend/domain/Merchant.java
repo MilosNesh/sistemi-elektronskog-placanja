@@ -27,11 +27,11 @@ public class Merchant {
     )
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
-    @Column(name = "merchant_username",
+    @Column(name = "merchant_email",
             nullable = false,
             unique = true,
             length = 50)
-    private String merchantUsername;
+    private String merchantEmail;
 
     @Column(nullable = false, name = "merchant_password")
     private String merchantPassword;
@@ -51,6 +51,8 @@ public class Merchant {
     @Column(name = "error_url")
     private String errorUrl;
 
+    public Merchant() {}
+
     public Long getMerchantId() {
         return merchantId;
     }
@@ -59,8 +61,8 @@ public class Merchant {
         return paymentMethods;
     }
 
-    public String getMerchantUsername() {
-        return merchantUsername;
+    public String getMerchantEmail() {
+        return merchantEmail;
     }
 
     public String getMerchantPassword() {
@@ -89,7 +91,7 @@ public class Merchant {
 
     public Merchant(MerchantDTO merchantDTO) {
         this.merchantId = merchantDTO.getMerchantId();
-        this.merchantUsername = merchantDTO.getMerchantUsername();
+        this.merchantEmail = merchantDTO.getMerchantEmail();
         this.paymentMethods = merchantDTO.getPaymentMethods();
         this.sellerUrl = merchantDTO.getSellerUrl();
         this.port = merchantDTO.getPort();
