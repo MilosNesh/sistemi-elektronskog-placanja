@@ -24,7 +24,6 @@ public class Transaction {
     @Column(name = "amount")
     private Integer amount;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "currency")
     private String currency;
 

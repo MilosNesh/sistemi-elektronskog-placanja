@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MerchantPaymentMethodDTO {
+public class PaymentMethodDTO {
     private Long id;
     private String paymentMethod;
     private Boolean isEnabled;

@@ -19,6 +19,6 @@ public class MerchantDTO {
     private String successUrl;
     private String failedUrl;
     private String errorUrl;
-    private List<MerchantPaymentMethodDTO> paymentMethods;
+    private List<PaymentMethodDTO> paymentMethods;
 
 }
