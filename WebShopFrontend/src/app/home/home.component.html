@@ -2,6 +2,28 @@
     <div class="title">
         <h1>Find the best car for you</h1>
     </div>
+    <div class="search">
+        <label for="startDate">Start date</label>
+        <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="startDate"
+            [min]="minStartDate"
+            (change)="onStartDateChange()"
+        >
+
+        <label for="endDate">End date</label>
+        <input
+            type="date"
+            id="endDate"
+            [(ngModel)]="endDate"
+            [min]="minEndDate"
+        >
+
+        <button (click)="search()">Search</button>
+        <button (click)="ngOnInit()">Reset</button>
+
+    </div>
     <div class="vehicles">
         <div class="vehicle" *ngFor="let vehicle of vehicles">
             <div class="image">

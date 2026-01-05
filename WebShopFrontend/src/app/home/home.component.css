@@ -1,5 +1,4 @@
 .container {
-    /* margin: 0 auto; */
     padding: 20px;
     background: url("/assets/rentacarbg.jpg") no-repeat center/cover;
     min-height: 100%;
@@ -10,6 +9,7 @@
     flex-direction: column;
     gap: 20px;
     max-width: 60%;
+    margin: 0 auto;
 }
 
 .vehicle {
@@ -70,7 +70,6 @@ button {
     color: #fff;
     border-radius: 6px;
     cursor: pointer;
-    /* transition: background 0.3s ease; */
 }
 
 button:hover {
@@ -81,4 +80,59 @@ button:hover {
     color: white;
     text-align: center;
     font-size: large;
+}
+
+.search {
+    max-width: 830px;
+    margin: 0 auto;
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    display: flex;
+    gap: 1%;
+}
+
+.search label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 1%;
+}
+
+.search input[type="date"] {
+  width: 200px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search input[type="date"]:focus {
+  border-color: #007bff;
+}
+
+.search h1 {
+  font-size: 20px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.search button {
+  padding: 10px 20px;
+  border: none;
+  background: #28a745;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.reservation-dates button:hover {
+  background: #218838;
 }

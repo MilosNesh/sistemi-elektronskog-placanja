@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,16 @@ public class VehicleController {
     public ResponseEntity<List<VehicleDTO>> getAll() {
         List<VehicleDTO> vehicles = new ArrayList<>();
         for (Vehicle vehicle : vehicleService.getAll()) {
+            vehicles.add(new VehicleDTO(vehicle));
+        }
+
+        return ResponseEntity.ok(vehicles);
+    }
+
+    @GetMapping("/available/{from}/{to}")
+    public ResponseEntity<List<VehicleDTO>> getAvailableVehicles(@PathVariable String from, @PathVariable String to) {
+        List<VehicleDTO> vehicles = new ArrayList<>();
+        for (Vehicle vehicle : vehicleService.getAvailable(Date.valueOf(from), Date.valueOf(to))) {
             vehicles.add(new VehicleDTO(vehicle));
         }
 

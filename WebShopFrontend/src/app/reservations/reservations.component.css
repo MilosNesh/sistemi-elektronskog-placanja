@@ -8,6 +8,7 @@
 .reservations {
     display: flex;
     flex-direction: column;
+    margin: auto;
     gap: 20px;
     max-width: 60%;
 }
