@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "merchant_payment_methods")
-@Data
 public class PaymentMethod {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package org.example.pspbackend.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.pspbackend.dto.MerchantDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "merchants")
-@Data
 public class Merchant {
 
     @Id
@@ -51,4 +51,50 @@ public class Merchant {
     @Column(name = "error_url")
     private String errorUrl;
 
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public List<PaymentMethod> getPaymentMethods() {
+        return paymentMethods;
+    }
+
+    public String getMerchantUsername() {
+        return merchantUsername;
+    }
+
+    public String getMerchantPassword() {
+        return merchantPassword;
+    }
+
+    public String getSellerUrl() {
+        return sellerUrl;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public String getSuccessUrl() {
+        return successUrl;
+    }
+
+    public String getFailedUrl() {
+        return failedUrl;
+    }
+
+    public String getErrorUrl() {
+        return errorUrl;
+    }
+
+    public Merchant(MerchantDTO merchantDTO) {
+        this.merchantId = merchantDTO.getMerchantId();
+        this.merchantUsername = merchantDTO.getMerchantUsername();
+        this.paymentMethods = merchantDTO.getPaymentMethods();
+        this.sellerUrl = merchantDTO.getSellerUrl();
+        this.port = merchantDTO.getPort();
+        this.successUrl = merchantDTO.getSuccessUrl();
+        this.failedUrl = merchantDTO.getFailedUrl();
+        this.errorUrl = merchantDTO.getErrorUrl();
+    }
 }
