@@ -47,10 +47,8 @@ public class VehicleServiceImpl implements VehicleService {
 
         for (Reservation reservation : reservations) {
             if (reservation.getVehicle().getId().equals(vehicle.getId()) &&
-                    ((from.after(reservation.getDateFrom()) && to.before(reservation.getDateTo()))
-                    || (to.after(reservation.getDateFrom()) && to.before(reservation.getDateTo()))
-                    || from.equals(reservation.getDateFrom()) || from.equals(reservation.getDateTo())
-                    || to.equals(reservation.getDateFrom()) || to.equals(reservation.getDateTo()))) {
+                    from.before(Date.valueOf(reservation.getDateTo().toLocalDate().plusDays(1))) &&
+                    to.after(reservation.getDateFrom())) {
                 return false;
             }
         }
