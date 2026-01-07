@@ -1,6 +1,7 @@
 package org.example.pspbackend.service.impl;
 
 import org.example.pspbackend.domain.Merchant;
+import org.example.pspbackend.domain.PaymentMethod;
 import org.example.pspbackend.dto.LoginDetailsDTO;
 import org.example.pspbackend.dto.MerchantDTO;
 import org.example.pspbackend.repository.MerchantRepository;
@@ -8,6 +9,9 @@ import org.example.pspbackend.security.PasswordHasher;
 import org.example.pspbackend.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MerchantServiceImpl implements MerchantService {
@@ -20,6 +24,14 @@ public class MerchantServiceImpl implements MerchantService {
 
     public Merchant update(MerchantDTO merchantDTO){
         Merchant merchant = new Merchant(merchantDTO);
+
+        List<PaymentMethod> newMethods = new ArrayList<>();
+        for (PaymentMethod pm : merchantDTO.getPaymentMethods()) {
+            pm.setMerchant(merchant);
+            newMethods.add(pm);
+        }
+        merchant.setPaymentMethods(newMethods);
+
         return merchantRepository.save(merchant);
     }
 

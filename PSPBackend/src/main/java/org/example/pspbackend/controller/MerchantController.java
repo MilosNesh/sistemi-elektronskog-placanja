@@ -33,7 +33,7 @@ public class MerchantController {
         return ResponseEntity.ok(jwt);
     }
 
-    @PutMapping()
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MerchantDTO> update(
             @RequestBody MerchantDTO merchantDTO
     ) {
@@ -41,9 +41,18 @@ public class MerchantController {
         return ResponseEntity.ok(new MerchantDTO(merchant));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<MerchantDTO> findById(@PathVariable Long id) {
         Merchant merchant = merchantService.getById(id);
+        if(merchant == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new MerchantDTO(merchant));
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<MerchantDTO> findByEmail(@PathVariable String email) {
+        Merchant merchant = merchantService.getByEmail(email);
         if(merchant == null) {
             return ResponseEntity.notFound().build();
         }

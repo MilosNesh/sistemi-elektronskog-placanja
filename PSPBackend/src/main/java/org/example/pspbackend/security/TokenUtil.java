@@ -50,6 +50,7 @@ public class TokenUtil {
     public Boolean validateToken(String token, Merchant merchant) {
         final String email = getEmailFromToken(token);
         final Date expiration = getExpiration(token);
+        System.out.println("email tokennn: " + email + " expiration: " + expiration);
 
         return (email != null
                 && email.equals(merchant.getMerchantEmail())

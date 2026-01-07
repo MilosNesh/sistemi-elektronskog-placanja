@@ -33,7 +33,7 @@ public class Merchant {
             length = 50)
     private String merchantEmail;
 
-    @Column(nullable = false, name = "merchant_password")
+    @Column(name = "merchant_password")
     private String merchantPassword;
 
     @Column(name = "seller_url")
@@ -55,6 +55,10 @@ public class Merchant {
 
     public Long getMerchantId() {
         return merchantId;
+    }
+
+    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
     }
 
     public List<PaymentMethod> getPaymentMethods() {

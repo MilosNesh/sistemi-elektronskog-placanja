@@ -9,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class MerchantDTO {
     private Long merchantId;
@@ -20,6 +19,8 @@ public class MerchantDTO {
     private String failedUrl;
     private String errorUrl;
     private List<PaymentMethod> paymentMethods;
+
+    public MerchantDTO() {}
 
     public MerchantDTO(Merchant merchant) {
         this.merchantId = merchant.getMerchantId();

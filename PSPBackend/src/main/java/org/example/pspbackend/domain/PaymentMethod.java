@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -16,7 +14,7 @@ public class PaymentMethod {
     private Long id;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "merchant_id", nullable = false)
     private Merchant merchant;
 
@@ -27,4 +25,31 @@ public class PaymentMethod {
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled = true;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public void setPaymentMethod(PaymentMethodType paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public PaymentMethodType getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
 }
