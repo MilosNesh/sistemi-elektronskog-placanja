@@ -3,6 +3,7 @@ import { MerchantService } from '../services/merchant.service';
 import { Merchant } from '../models/merchant.model';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { PaymentMethod } from '../models/payment-method.model';
 
 @Component({
   selector: 'app-payment-method-configuration',
@@ -15,6 +16,7 @@ import { AuthService } from '../services/auth.service';
 export class PaymentMethodConfigurationComponent {
 
   merchant!: Merchant;
+  paymentMethods!: PaymentMethod[];
   feedbackMessage: string = '';
   feedbackSuccess: boolean = true;
 
@@ -24,7 +26,7 @@ export class PaymentMethodConfigurationComponent {
     this.merchantService.getByEmail(this.authService.getEmail()).subscribe({
       next: (response) => {
         this.merchant = response;
-        console.log("Merchant: ", this.merchant);
+        this.loadPaymentMethods();
       },
       error: (err) => {
         console.log("Greska pri ucitavanju Merchant-a");
@@ -32,31 +34,53 @@ export class PaymentMethodConfigurationComponent {
     })
   }
 
-  isMethodEnabled(methodType: string): boolean {
-    if (!this.merchant || !this.merchant.paymentMethods) {
+  loadPaymentMethods(){
+    this.merchantService.getPaymentMethods().subscribe({
+      next: (response) => {
+        this.paymentMethods = response;
+        console.log("Payment methods: ", response);
+      },
+      error: (err) => {
+        console.log("Greska pri ucitavanju nacina placanja");
+      }
+    })
+  }
+
+  isMethodEnabled(paymentMethodId: number): boolean {
+    if (!this.merchant || !this.merchant.merchantPaymentMethods) {
       return false;
     }
 
-    const method = this.merchant.paymentMethods.find(
-      pm => pm.paymentMethod === methodType
+    const method = this.merchant.merchantPaymentMethods.find(
+      pm => pm.merchantPaymentMethodId === paymentMethodId
     );
 
-    return method ? method.isEnabled : false;
+    return method ? method.enabled : false;
   }
 
-  togglePaymentMethod(methodType: string, event: any) {
-  const isChecked = event.target.checked;
+  togglePaymentMethod(paymentMethodId: number, event: any) {
+    const isChecked = event.target.checked;
 
-  const method = this.merchant.paymentMethods.find(
-    pm => pm.paymentMethod === methodType
-  );
+    if (!isChecked) {
+    const enabledCount = this.merchant.merchantPaymentMethods.filter(pm => pm.enabled).length;
 
-  if (method) {
-    method.isEnabled = isChecked;
-    console.log(`Updated ${methodType} to: ${isChecked}`);
-  } else {
-    console.error(`Payment method ${methodType} not found in merchant data!`);
+    if (enabledCount === 1) {
+      event.target.checked = true;
+      this.feedbackMessage = "You must have at least one payment method enabled";
+      return;
+    }
   }
+
+    const method = this.merchant.merchantPaymentMethods.find(
+      pm => pm.paymentMethodId === paymentMethodId
+    );
+
+    if (method) {
+      method.enabled = isChecked;
+      console.log(`Updated ${paymentMethodId} to: ${isChecked}`);
+    } else {
+      console.error(`Payment method ${paymentMethodId} not found in merchant data!`);
+    }
 }
 
   saveMerchant() {

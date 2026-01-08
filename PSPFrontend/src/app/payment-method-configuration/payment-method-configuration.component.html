@@ -4,33 +4,20 @@
   {{ feedbackMessage }}
 </div>
 
-  <div class="payment-methods">
-    <div class="payment-card" data-method="CARD">
-      <img src="images/credit-card.png" alt="Credit Card" />
-      <div class="payment-info">
-        <h3>Credit Card</h3>
-        <p>Visa, MasterCard</p>
-      </div>
-      <label class="payment-label">
-          <input type="checkbox"
-                 [checked]="isMethodEnabled('CREDIT_CARD')"
-                 (change)="togglePaymentMethod('CREDIT_CARD', $event)">
-        </label>
+ <div class="payment-methods">
+  <div class="payment-card" *ngFor="let method of paymentMethods" [attr.data-method]="method.type">
+    <img [src]="method.image || 'assets/default.png'" [alt]="method.type" />
+    <div class="payment-info">
+      <h3>{{ method.type }}</h3>
+      <p>{{ method.description }}</p>
     </div>
-
-    <div class="payment-card" data-method="QR">
-      <img src="images/qrcode.png" alt="QR Code" />
-      <div class="payment-info">
-        <h3>QR Code</h3>
-        <p>Instant payment</p>
-      </div>
-        <label class="payment-label">
-          <input type="checkbox"
-                 [checked]="isMethodEnabled('QR_CODE')"
-                 (change)="togglePaymentMethod('QR_CODE', $event)">
-        </label>
-    </div>
+    <label class="payment-label">
+      <input type="checkbox"
+             [checked]="isMethodEnabled(method.paymentMethodId)"
+             (change)="togglePaymentMethod(method.paymentMethodId, $event)" />
+    </label>
   </div>
+</div>
 
   <div class="callback-urls">
     <div class="form-group">

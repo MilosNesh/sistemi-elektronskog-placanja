@@ -1,5 +1,6 @@
 export interface PaymentMethod {
-  id: number;
-  paymentMethod: string;
-  isEnabled: boolean;
+  paymentMethodId: number;
+  type: string;
+  image?: string;
+  description?: string;
 }

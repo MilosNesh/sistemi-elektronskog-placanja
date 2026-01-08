@@ -2,6 +2,7 @@ package org.example.pspbackend.dto;
 
 import lombok.*;
 import org.example.pspbackend.domain.Merchant;
+import org.example.pspbackend.domain.MerchantPaymentMethod;
 import org.example.pspbackend.domain.PaymentMethod;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class MerchantDTO {
     private String successUrl;
     private String failedUrl;
     private String errorUrl;
-    private List<PaymentMethod> paymentMethods;
+    private List<MerchantPaymentMethodDTO> merchantPaymentMethods;
 
     public MerchantDTO() {}
 
@@ -30,7 +31,15 @@ public class MerchantDTO {
         this.successUrl = merchant.getSuccessUrl();
         this.failedUrl = merchant.getFailedUrl();
         this.errorUrl = merchant.getErrorUrl();
-        this.paymentMethods = merchant.getPaymentMethods();
+
+        this.merchantPaymentMethods = merchant.getMerchantPaymentMethods()
+                .stream()
+                .map(mpm -> new MerchantPaymentMethodDTO(
+                        mpm.getMerchantPaymentMethodId(),
+                        mpm.getEnabled(),
+                        mpm.getPaymentMethod().getPaymentMethodId()
+                ))
+                .toList();
     }
 
     public Long getMerchantId() {
@@ -61,7 +70,7 @@ public class MerchantDTO {
         return failedUrl;
     }
 
-    public List<PaymentMethod> getPaymentMethods() {
-        return paymentMethods;
+    public List<MerchantPaymentMethodDTO> getMerchantPaymentMethods() {
+        return merchantPaymentMethods;
     }
 }

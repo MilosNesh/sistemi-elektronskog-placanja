@@ -4,52 +4,41 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "payment_methods")
 public class PaymentMethod {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "payment_method_id")
+    private Long paymentMethodId;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "merchant_id", nullable = false)
-    private Merchant merchant;
+    @Column(name = "type", nullable = false, unique = true, length = 50)
+    private String type; // npr. "CREDIT_CARD", "PAYPAL", "BANK_TRANSFER"
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_method", nullable = false)
-    private PaymentMethodType paymentMethod;
+    @Column(name = "image")
+    private String image;
 
-    @Column(name = "is_enabled", nullable = false)
-    private Boolean isEnabled = true;
+    @Column(name = "description", length = 255)
+    private String description;
 
-    public Long getId() {
-        return id;
+    public Long getPaymentMethodId() {
+        return paymentMethodId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getType() {
+        return type;
     }
 
-    public void setMerchant(Merchant merchant) {
-        this.merchant = merchant;
+    public String getImage() {
+        return image;
     }
 
-    public void setPaymentMethod(PaymentMethodType paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
-    }
-
-    public PaymentMethodType getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public Boolean getIsEnabled() {
-        return isEnabled;
+    public String getDescription() {
+        return description;
     }
 }

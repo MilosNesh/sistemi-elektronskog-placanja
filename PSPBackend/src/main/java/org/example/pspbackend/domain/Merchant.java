@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "merchants")
 public class Merchant {
@@ -21,11 +20,12 @@ public class Merchant {
     private Long merchantId;
 
     @OneToMany(
+            fetch = FetchType.EAGER,
             mappedBy = "merchant",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<PaymentMethod> paymentMethods = new ArrayList<>();
+    private List<MerchantPaymentMethod> merchantPaymentMethods = new ArrayList<>();
 
     @Column(name = "merchant_email",
             nullable = false,
@@ -53,16 +53,27 @@ public class Merchant {
 
     public Merchant() {}
 
+    public Merchant(MerchantDTO merchantDTO) {
+        this.merchantId = merchantDTO.getMerchantId();
+        this.merchantEmail = merchantDTO.getMerchantEmail();
+        this.sellerUrl = merchantDTO.getSellerUrl();
+        this.port = merchantDTO.getPort();
+        this.successUrl = merchantDTO.getSuccessUrl();
+        this.failedUrl = merchantDTO.getFailedUrl();
+        this.errorUrl = merchantDTO.getErrorUrl();
+
+    }
+
     public Long getMerchantId() {
         return merchantId;
     }
 
-    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
-        this.paymentMethods = paymentMethods;
+    public void setMerchantPaymentMethods(List<MerchantPaymentMethod> merchantPaymentMethods) {
+        this.merchantPaymentMethods = merchantPaymentMethods;
     }
 
-    public List<PaymentMethod> getPaymentMethods() {
-        return paymentMethods;
+    public List<MerchantPaymentMethod> getMerchantPaymentMethods() {
+        return merchantPaymentMethods;
     }
 
     public String getMerchantEmail() {
@@ -75,6 +86,34 @@ public class Merchant {
 
     public String getSellerUrl() {
         return sellerUrl;
+    }
+
+    public void setMerchantEmail(String merchantEmail) {
+        this.merchantEmail = merchantEmail;
+    }
+
+    public void setMerchantPassword(String merchantPassword) {
+        this.merchantPassword = merchantPassword;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public void setSellerUrl(String sellerUrl) {
+        this.sellerUrl = sellerUrl;
+    }
+
+    public void setSuccessUrl(String successUrl) {
+        this.successUrl = successUrl;
+    }
+
+    public void setFailedUrl(String failedUrl) {
+        this.failedUrl = failedUrl;
+    }
+
+    public void setErrorUrl(String errorUrl) {
+        this.errorUrl = errorUrl;
     }
 
     public Integer getPort() {
@@ -93,14 +132,4 @@ public class Merchant {
         return errorUrl;
     }
 
-    public Merchant(MerchantDTO merchantDTO) {
-        this.merchantId = merchantDTO.getMerchantId();
-        this.merchantEmail = merchantDTO.getMerchantEmail();
-        this.paymentMethods = merchantDTO.getPaymentMethods();
-        this.sellerUrl = merchantDTO.getSellerUrl();
-        this.port = merchantDTO.getPort();
-        this.successUrl = merchantDTO.getSuccessUrl();
-        this.failedUrl = merchantDTO.getFailedUrl();
-        this.errorUrl = merchantDTO.getErrorUrl();
-    }
 }
