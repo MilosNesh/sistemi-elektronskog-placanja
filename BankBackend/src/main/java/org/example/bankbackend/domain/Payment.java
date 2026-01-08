@@ -23,6 +23,10 @@ public class Payment {
     @ManyToOne(optional = false)
     private Merchant merchant;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     @Column(nullable = false)
     private Double amount;
 
@@ -44,4 +48,8 @@ public class Payment {
 
     @Column(nullable = false)
     private Integer attemptCount;
+
+    private String globalTransactionId;
+
+    private LocalDateTime acquirerTimestamp;
 }

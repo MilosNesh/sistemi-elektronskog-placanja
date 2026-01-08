@@ -2,6 +2,7 @@ package org.example.bankbackend.controller;
 
 import org.example.bankbackend.domain.CardPaymentRequest;
 import org.example.bankbackend.domain.PaymentFormResponse;
+import org.example.bankbackend.domain.PaymentResponse;
 import org.example.bankbackend.service.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +25,10 @@ public class PaymentController {
     }
 
     @PostMapping("/{paymentId}/pay")
-    public ResponseEntity<Void> pay( // samo placanje
-            @PathVariable Long paymentId,
-            @RequestBody CardPaymentRequest request
+    public ResponseEntity<PaymentResponse> pay(
+            @PathVariable Long paymentId, @RequestBody CardPaymentRequest request
             ){
-        paymentService.processCardPayment(paymentId, request);
-        return ResponseEntity.ok().build();
+        PaymentResponse response = paymentService.processCardPayment(paymentId, request);
+        return ResponseEntity.ok(response);
     }
 }

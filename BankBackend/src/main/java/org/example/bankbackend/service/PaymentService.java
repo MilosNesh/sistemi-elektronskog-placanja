@@ -2,6 +2,7 @@ package org.example.bankbackend.service;
 
 import org.example.bankbackend.domain.*;
 import org.example.bankbackend.domain.enums.PaymentStatus;
+import org.example.bankbackend.repository.CustomerRepository;
 import org.example.bankbackend.repository.MerchantRepository;
 import org.example.bankbackend.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,12 @@ import java.util.UUID;
 public class PaymentService {
     private final MerchantRepository merchantRepository;
     private final PaymentRepository paymentRepository;
+    private final CustomerRepository customerRepository;
 
-    public PaymentService(MerchantRepository merchantRepository, PaymentRepository paymentRepository) {
+    public PaymentService(MerchantRepository merchantRepository, PaymentRepository paymentRepository, CustomerRepository customerRepository) {
         this.merchantRepository = merchantRepository;
         this.paymentRepository = paymentRepository;
+        this.customerRepository = customerRepository;
     }
 
     public PaymentInitResponse initPayment(PaymentInitRequest request){
@@ -85,7 +88,7 @@ public class PaymentService {
         );
     }
 
-    public void processCardPayment(Long paymentId, CardPaymentRequest request){
+    public PaymentResponse processCardPayment(Long paymentId, CardPaymentRequest request){
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
@@ -103,10 +106,28 @@ public class PaymentService {
         validateExpiryDate(request.getExpiryDate());
         validateSecurityCode(request.getSecurityCode());
 
-        payment.setAttemptCount(1);
+        Customer customer = payment.getCustomer();
+        if(customer.getBalance() < payment.getAmount()){
+            payment.setStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+            throw new IllegalStateException("Insufficient funds");
+        }
 
+        customer.setBalance(customer.getBalance() - payment.getAmount());
+        payment.setAttemptCount(1);
         payment.setStatus(PaymentStatus.COMPLETED);
+
+        payment.setGlobalTransactionId(UUID.randomUUID().toString());
+        payment.setAcquirerTimestamp(LocalDateTime.now());
+
+        customerRepository.save(customer);
         paymentRepository.save(payment);
+
+        return new PaymentResponse(
+                payment.getStatus(),
+                payment.getGlobalTransactionId(),
+                payment.getAcquirerTimestamp()
+        );
     }
 
     private void validatePan(String pan) {
