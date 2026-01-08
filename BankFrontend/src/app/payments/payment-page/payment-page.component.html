@@ -1,0 +1,42 @@
+<div *ngIf="loading">Loading...</div>
+
+<div *ngIf="error" class="error">
+  {{ error }}
+</div>
+
+<div *ngIf="payment && !loading">
+
+  <h2>Card Payment</h2>
+
+  <p>
+    Amount: <strong>{{ payment.amount }} {{ payment.currency }}</strong>
+  </p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <label>
+      Card Number
+      <input type="text" formControlName="pan" />
+    </label>
+
+    <label>
+      Card Holder Name
+      <input type="text" formControlName="cardHolderName" />
+    </label>
+
+    <label>
+      Expiry Date (MM/YY)
+      <input type="text" formControlName="expiryDate" placeholder="MM/YY" />
+    </label>
+
+    <label>
+      CVV
+      <input type="password" formControlName="securityCode" />
+    </label>
+
+    <button type="submit" [disabled]="form.invalid">
+      Pay
+    </button>
+
+  </form>
+</div>

@@ -21,14 +21,13 @@ public class PspAuthService {
         this.objectMapper = objectMapper;
     }
 
-    public void validateRequest(Object requestBody, String receivedSignature, String timestamp){
+    public void validateRequest(Object requestBody, String receivedSignature){
         try{
-            String bodyJson = objectMapper.writeValueAsString(requestBody);
-
-            String dataToSign = bodyJson + timestamp;
+            String dataToSign = objectMapper.writeValueAsString(requestBody);
 
             String expectedSignature = hmacUtil.generateHmac(HMAC_ALGORITHM, dataToSign, sharedSecret);
-
+            System.out.println("EXPECTED:" + expectedSignature);
+            System.out.println("RECEIVED:" + receivedSignature);
             if(!expectedSignature.equals(receivedSignature)){
                 throw new SecurityException("Invalid HMAC signature");
             }

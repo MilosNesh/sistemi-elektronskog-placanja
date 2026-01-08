@@ -2,14 +2,12 @@ package org.example.bankbackend.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class PaymentInitResponse {
+public class PaymentFormResponse {
     private Long paymentId;
-    private String paymentUrl;
+    private Double amount;
+    private String currency;
+    private Boolean expired;
 }

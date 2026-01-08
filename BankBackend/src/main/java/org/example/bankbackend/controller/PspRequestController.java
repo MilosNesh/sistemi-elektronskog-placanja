@@ -23,10 +23,9 @@ public class PspRequestController {
     @PostMapping("/init")
     public ResponseEntity<PaymentInitResponse> initPayment(
             @RequestBody PaymentInitRequest request,
-            @RequestHeader("X-PSP-SIGNATURE") String signature,
-            @RequestHeader("X-PSP-TIMESTAMP") String timestamp
+            @RequestHeader("X-PSP-SIGNATURE") String signature
             ){
-        pspAuthService.validateRequest(request, signature, timestamp);
+        pspAuthService.validateRequest(request, signature);
         PaymentInitResponse response = paymentService.initPayment(request);
         return ResponseEntity.ok(response);
     }

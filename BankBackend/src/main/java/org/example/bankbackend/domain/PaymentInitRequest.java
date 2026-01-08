@@ -10,4 +10,5 @@ public class PaymentInitRequest {
     private Double amount;
     private String currency;
     private String stan;
+    private String timestamp;
 }
