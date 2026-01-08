@@ -27,17 +27,11 @@ public class Payment {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @Column(nullable = false)
     private Double amount;
-
-    @Column(nullable = false)
     private String currency;
-
-    @Column(nullable = false, unique = true)
     private String stan;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private PaymentStatus status;
 
     @Column(nullable = false)

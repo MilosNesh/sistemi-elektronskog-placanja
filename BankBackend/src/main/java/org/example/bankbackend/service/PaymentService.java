@@ -106,17 +106,20 @@ public class PaymentService {
         validateExpiryDate(request.getExpiryDate());
         validateSecurityCode(request.getSecurityCode());
 
-        Customer customer = payment.getCustomer();
+        Customer customer = customerRepository.findByPan(request.getPan())
+                .orElseThrow(() -> new IllegalArgumentException("Card not recognized"));
+
         if(customer.getBalance() < payment.getAmount()){
             payment.setStatus(PaymentStatus.FAILED);
+            payment.setAttemptCount(1);
             paymentRepository.save(payment);
             throw new IllegalStateException("Insufficient funds");
         }
 
         customer.setBalance(customer.getBalance() - payment.getAmount());
+        payment.setCustomer(customer);
         payment.setAttemptCount(1);
         payment.setStatus(PaymentStatus.COMPLETED);
-
         payment.setGlobalTransactionId(UUID.randomUUID().toString());
         payment.setAcquirerTimestamp(LocalDateTime.now());
 
