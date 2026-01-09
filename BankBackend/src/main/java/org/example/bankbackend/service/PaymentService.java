@@ -50,7 +50,7 @@ public class PaymentService {
 
         payment = paymentRepository.save(payment);
 
-        return new PaymentInitResponse(payment.getId(), "https://bank-frontend/pay/" + payment.getId());
+        return new PaymentInitResponse(payment.getId(), "http://localhost:4200/pay/" + payment.getId());
     }
 
     public PaymentFormResponse getPaymentForm(Long paymentId){
@@ -132,7 +132,7 @@ public class PaymentService {
                 payment.getAcquirerTimestamp()
         );
     }
-
+    
     private void validatePan(String pan) {
         if (pan == null || !pan.matches("\\d{13,19}")) {
             throw new IllegalArgumentException("Invalid PAN format");
