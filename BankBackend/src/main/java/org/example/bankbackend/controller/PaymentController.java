@@ -27,7 +27,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{paymentId}/qr")
-    public ResponseEntity<QrPaymentResponse> getQr(@PathVariable Long paymentId){
+    public ResponseEntity<String> getQr(@PathVariable Long paymentId){
         return ResponseEntity.ok(paymentService.generateQr(paymentId));
     }
 

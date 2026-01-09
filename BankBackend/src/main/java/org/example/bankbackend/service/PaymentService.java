@@ -140,12 +140,9 @@ public class PaymentService {
     }
 
     public PaymentResponse processQrPayment(QrPaymentRequest qrRequest) {
-        Map<String, String> qrData = parseQrPayload(qrRequest.getQrPayload());
+        ParsedQrData qr = parseQr(qrRequest.getQrPayload());
 
-        // PID iz QR payloada
-        Long paymentId = Long.parseLong(qrData.get("PID"));
-
-        Payment payment = paymentRepository.findById(paymentId)
+        Payment payment = paymentRepository.findById(qr.paymentId())
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         // validacija vremena
@@ -156,14 +153,13 @@ public class PaymentService {
         }
 
         // validacija amount i currency
-        double amount = Double.parseDouble(qrData.get("AMOUNT"));
-        if (!payment.getCurrency().equals(qrData.get("CUR")) || payment.getAmount() != amount) {
+        if (!payment.getCurrency().equals(qr.currency()) || payment.getAmount() != qr.amount()) {
             throw new IllegalArgumentException("QR payment data mismatch");
         }
 
         // validacija merchant account
         Merchant merchant = payment.getMerchant();
-        if (!merchant.getAccountNumber().equals(qrData.get("ACC"))) {
+        if (!merchant.getAccountNumber().equals(qr.receiverAccount())) {
             throw new IllegalArgumentException("QR merchant account mismatch");
         }
 
@@ -181,7 +177,7 @@ public class PaymentService {
         );
     }
 
-    public QrPaymentResponse generateQr(Long paymentId) {
+    public String generateQr(Long paymentId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
@@ -189,43 +185,42 @@ public class PaymentService {
             throw new IllegalStateException("Payment expired");
         }
 
-        Merchant m = payment.getMerchant();
+        Merchant merchant = payment.getMerchant();
 
-        String payload = String.format(
-                "IPS|PAYMENT|" +
-                        "MID=%d|" +
-                        "MERCHANT=%s|" +
-                        "ACC=%s|" +
-                        "AMOUNT=%.2f|" +
-                        "CUR=%s|" +
-                        "PID=%d",
-                m.getId(),
-                m.getName(),
-                m.getAccountNumber(),
-                payment.getAmount(),
+        return String.format(
+                "K:PR|V:01|C:%s|I:%s%.2f|R:%s|N:%s|P:Placanje|S:%d",
                 payment.getCurrency(),
+                payment.getCurrency(),
+                payment.getAmount(),
+                merchant.getAccountNumber(),
+                merchant.getName(),
                 payment.getId()
         );
-
-        return new QrPaymentResponse(payment.getId(), payload);
     }
 
-    private Map<String, String> parseQrPayload(String payload) {
-        //IPS|PAYMENT|MID=123|MERCHANT=Shop|ACC=RS...|AMOUNT=1500.00|CUR=RSD|PID=1
-        String[] parts = payload.split("\\|");
-        if (parts.length < 2 || !"IPS".equals(parts[0]) || !"PAYMENT".equals(parts[1])) {
-            throw new IllegalArgumentException("Invalid QR format");
-        }
-
+    public ParsedQrData parseQr(String qr) {
         Map<String, String> map = new HashMap<>();
-        for (int i = 2; i < parts.length; i++) {
-            String[] kv = parts[i].split("=", 2);
-            if (kv.length != 2) {
-                throw new IllegalArgumentException("Invalid QR key-value: " + parts[i]);
-            }
+
+        for (String part : qr.split("\\|")) {
+            String[] kv = part.split(":", 2);
             map.put(kv[0], kv[1]);
         }
-        return map;
+
+        if (!"PR".equals(map.get("K"))) {
+            throw new IllegalArgumentException("Invalid QR type");
+        }
+
+        String currency = map.get("C");
+        String amountRaw = map.get("I").replace(currency, "").replace(",", ".");
+        Double amount = Double.parseDouble(amountRaw);
+
+        return new ParsedQrData(
+                currency,
+                amount,
+                map.get("R"),
+                map.get("N"),
+                Long.parseLong(map.get("S"))
+        );
     }
 
     private void validatePan(String pan) {
