@@ -16,11 +16,11 @@ export class AuthService {
   }
 
   public login(loginDetails: LoginDetails) : Observable<string> {
-    return this.http.post("http://localhost:8080/user/login", loginDetails, {responseType: 'text'});
+    return this.http.post("http://localhost:8070/user/login", loginDetails, {responseType: 'text'});
   }
   
   public register(user: User) : Observable<User> {
-    return this.http.post<User>("http://localhost:8080/user/register", user);
+    return this.http.post<User>("http://localhost:8070/user/register", user);
   }
 
   public getToken() : string {

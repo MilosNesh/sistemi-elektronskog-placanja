@@ -1,10 +1,7 @@
 package org.example.webshopbackend.controller;
 
 import org.example.webshopbackend.domain.*;
-import org.example.webshopbackend.dto.AdditionalServiceDTO;
-import org.example.webshopbackend.dto.InsuranceDTO;
-import org.example.webshopbackend.dto.ReservationDTO;
-import org.example.webshopbackend.dto.VehicleDTO;
+import org.example.webshopbackend.dto.*;
 import org.example.webshopbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +27,8 @@ public class VehicleController {
     private ReservationService reservationService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CallApiService callApiService;
 
     @GetMapping("/")
     public ResponseEntity<List<VehicleDTO>> getAll() {
@@ -80,7 +80,7 @@ public class VehicleController {
     }
 
     @PostMapping("/reservation/")
-    public ResponseEntity<ReservationDTO> saveReservation(@RequestBody ReservationDTO reservationDTO) {
+    public ResponseEntity<String> saveReservation(@RequestBody ReservationDTO reservationDTO) {
         String email = (String) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -91,10 +91,13 @@ public class VehicleController {
         Reservation reservation = new Reservation(reservationDTO);
         reservation.setUser(user);
         reservation = reservationService.save(reservation);
-        if (reservation == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(new ReservationDTO(reservation));
+//        if (reservation == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+        MerchantRequest merchantRequest = new MerchantRequest(1L, "$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm", 200, "RSD", "1", Date.valueOf(LocalDate.now()));
+        String url = callApiService.callApi(merchantRequest);
+
+        return ResponseEntity.ok(url);
     }
 
     @GetMapping("/reservation/")

@@ -139,7 +139,9 @@ export class VehicleComponent {
 
     this.vehicleService.createReservation(reservation).subscribe({
       next: (res) => {
-        this.router.navigate(["home"]);
+        // this.router.navigate(["home"]);
+        console.log(res)
+        window.location.href = res;
       },
       error: (err) => {
         alert("The vehicle is not available during this period!");

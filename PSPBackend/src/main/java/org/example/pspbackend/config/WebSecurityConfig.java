@@ -28,7 +28,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/merchant/login").permitAll()
-                        .requestMatchers("/payment/merchant-request").permitAll()
+                        .requestMatchers("/payment/merchant-request", "payment-method/merchant/{id}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess ->

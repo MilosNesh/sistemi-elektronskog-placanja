@@ -4,6 +4,7 @@ import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
 import org.example.pspbackend.dto.MerchantRequest;
 import org.example.pspbackend.dto.PaymentMethodDTO;
+import org.example.pspbackend.repository.MerchantRepository;
 import org.example.pspbackend.repository.TransactionRepository;
 import org.example.pspbackend.service.PaymentProvider;
 import org.example.pspbackend.service.PaymentService;
@@ -18,7 +19,8 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
     @Autowired
     private TransactionRepository transactionRepository;
-
+    @Autowired
+    private MerchantRepository merchantRepository;
     private final List<PaymentProvider> providers;
 
     public PaymentServiceImpl(List<PaymentProvider> providers) {
@@ -30,10 +32,11 @@ public class PaymentServiceImpl implements PaymentService {
             return null;
         }
 
-        Merchant merchant = new Merchant();
-        if(merchantRequest.getMerchantId() == null || !merchantRequest.getMerchantId().equals(merchant.getMerchantPassword())){
+        Merchant merchant = merchantRepository.getById(merchantRequest.getMerchantId());
+        if(merchant == null || !merchantRequest.getMerchantPassword().equals(merchant.getMerchantPassword())){
             return null;
         }
+
         Date pspTimestamp = Date.from(Instant.now());
 
         Transaction transaction = new Transaction(
