@@ -6,5 +6,5 @@ import { PaymentMethodsComponent } from './payment-methods/payment-methods.compo
 export const routes: Routes = [
   { path: 'payment-method-config', component: PaymentMethodConfigurationComponent},
   { path: 'login', component: LoginComponent},
-  { path: 'payment-method', component: PaymentMethodsComponent}
+  { path: 'payment/:transactionId/:merchantId', component: PaymentMethodsComponent}
 ];

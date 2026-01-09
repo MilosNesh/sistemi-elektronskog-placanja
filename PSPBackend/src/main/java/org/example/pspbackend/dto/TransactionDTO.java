@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,11 +15,10 @@ import java.time.LocalDateTime;
 public class TransactionDTO {
     private String id;
     private Long merchantId;
-    private String merchantUsername;
-    private Integer amount;
+    private double amount;
     private String currency;
-    private LocalDateTime merchantTimestamp;
+    private Date merchantTimestamp;
     private String merchantOrderId;
-    private LocalDateTime pspTimestamp;
+    private Date pspTimestamp;
 
 }

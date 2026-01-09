@@ -3,6 +3,7 @@ import { MerchantService } from '../services/merchant.service';
 import { CommonModule } from '@angular/common';
 import { PaymentMethodService } from '../services/payment-method.service';
 import { PaymentMethod } from '../models/payment-method.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-payment-methods',
@@ -15,11 +16,20 @@ import { PaymentMethod } from '../models/payment-method.model';
 export class PaymentMethodsComponent {
 
   paymentMethods!: PaymentMethod[];
+  merchantId!: string;
+  transactionId!: string;
 
-  constructor(private merchantService: MerchantService, private paymentMethodService: PaymentMethodService) {}
+  constructor(
+    private merchantService: MerchantService,
+    private paymentMethodService: PaymentMethodService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(){
-    this.paymentMethodService.getByMerchantId(1).subscribe({
+    this.merchantId = this.route.snapshot.paramMap.get('merchantId')!;
+    this.transactionId = this.route.snapshot.paramMap.get('transactionId')!;
+
+    this.paymentMethodService.getByMerchantId(this.merchantId).subscribe({
       next: (response) => {
         this.paymentMethods = response;
       },
@@ -29,7 +39,17 @@ export class PaymentMethodsComponent {
     })
   }
 
-  loadMerchant(){
+  onPaymentMethodSelected(paymentMethod: PaymentMethod) {
+    console.log('Selected payment method:', paymentMethod);
+
+    this.paymentMethodService.selectPaymentMethod(paymentMethod, this.transactionId).subscribe({
+      next: (response) => {
+        console.log('Payment method sent to backend successfully, redirect url: ', response);
+        window.location.href = response;
+      },
+      error: (err) => console.error('Error sending payment method', err)
+    });
 
   }
+
 }

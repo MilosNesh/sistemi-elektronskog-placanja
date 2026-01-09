@@ -11,8 +11,19 @@ export class PaymentMethodService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  public getByMerchantId(id: number) : Observable<PaymentMethod[]>{
+  public getByMerchantId(id: string) : Observable<PaymentMethod[]>{
     return this.http.get<PaymentMethod[]>(`http://localhost:8080/payment-method/merchant/${id}`, { headers: this.authService.getHeaderToken() });
   }
+
+    public getPaymentMethods() : Observable<PaymentMethod[]>{
+    return this.http.get<PaymentMethod[]>('http://localhost:8080/payment-method/all', { headers: this.authService.getHeaderToken() });
+  }
+
+  public selectPaymentMethod(paymentMethod: PaymentMethod, transactionId: string) : Observable<string>{
+    return this.http.post<string>(`http://localhost:8080/payment/${transactionId}/execute`, {
+      paymentMethod: paymentMethod
+    }, { headers: this.authService.getHeaderToken() })
+  }
+
 
 }

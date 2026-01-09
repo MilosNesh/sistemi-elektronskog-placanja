@@ -16,10 +16,6 @@ export class MerchantService {
     return this.http.get<Merchant>(`http://localhost:8080/merchant/id/${id}`, { headers: this.authService.getHeaderToken() });
   }
 
-  public getPaymentMethods() : Observable<PaymentMethod[]>{
-    return this.http.get<PaymentMethod[]>('http://localhost:8080/payment-method/all', { headers: this.authService.getHeaderToken() });
-  }
-
   public getByEmail(email: string) : Observable<Merchant>{
     return this.http.get<Merchant>(`http://localhost:8080/merchant/email/${email}`, { headers: this.authService.getHeaderToken() });
   }

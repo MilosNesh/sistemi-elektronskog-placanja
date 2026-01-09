@@ -4,6 +4,7 @@ import { Merchant } from '../models/merchant.model';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { PaymentMethod } from '../models/payment-method.model';
+import { PaymentMethodService } from '../services/payment-method.service';
 
 @Component({
   selector: 'app-payment-method-configuration',
@@ -20,7 +21,11 @@ export class PaymentMethodConfigurationComponent {
   feedbackMessage: string = '';
   feedbackSuccess: boolean = true;
 
-  constructor(private merchantService: MerchantService, private authService: AuthService) {}
+  constructor(
+    private merchantService: MerchantService,
+    private authService: AuthService,
+    private paymentMethodService: PaymentMethodService
+  ) {}
 
   ngOnInit(){
     this.merchantService.getByEmail(this.authService.getEmail()).subscribe({
@@ -35,7 +40,7 @@ export class PaymentMethodConfigurationComponent {
   }
 
   loadPaymentMethods(){
-    this.merchantService.getPaymentMethods().subscribe({
+    this.paymentMethodService.getPaymentMethods().subscribe({
       next: (response) => {
         this.paymentMethods = response;
         console.log("Payment methods: ", response);
