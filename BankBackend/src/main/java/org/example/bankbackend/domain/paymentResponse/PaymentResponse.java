@@ -1,4 +1,4 @@
-package org.example.bankbackend.domain;
+package org.example.bankbackend.domain.paymentResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

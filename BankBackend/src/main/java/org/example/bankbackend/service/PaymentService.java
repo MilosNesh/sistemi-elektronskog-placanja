@@ -2,6 +2,8 @@ package org.example.bankbackend.service;
 
 import org.example.bankbackend.domain.*;
 import org.example.bankbackend.domain.enums.PaymentStatus;
+import org.example.bankbackend.domain.paymentResponse.PaymentResponse;
+import org.example.bankbackend.domain.paymentResponse.QrPaymentResponse;
 import org.example.bankbackend.repository.CustomerRepository;
 import org.example.bankbackend.repository.MerchantRepository;
 import org.example.bankbackend.repository.PaymentRepository;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -106,8 +110,10 @@ public class PaymentService {
         validateExpiryDate(request.getExpiryDate());
         validateSecurityCode(request.getSecurityCode());
 
-        Customer customer = customerRepository.findByPan(request.getPan())
-                .orElseThrow(() -> new IllegalArgumentException("Card not recognized"));
+        String accountNumber = resolveAccountFromPan(request.getPan());
+
+        Customer customer = customerRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
 
         if(customer.getBalance() < payment.getAmount()){
             payment.setStatus(PaymentStatus.FAILED);
@@ -132,7 +138,96 @@ public class PaymentService {
                 payment.getAcquirerTimestamp()
         );
     }
-    
+
+    public PaymentResponse processQrPayment(QrPaymentRequest qrRequest) {
+        Map<String, String> qrData = parseQrPayload(qrRequest.getQrPayload());
+
+        // PID iz QR payloada
+        Long paymentId = Long.parseLong(qrData.get("PID"));
+
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+
+        // validacija vremena
+        if (payment.getExpiresAt().isBefore(LocalDateTime.now())) {
+            payment.setStatus(PaymentStatus.EXPIRED);
+            paymentRepository.save(payment);
+            throw new IllegalStateException("Payment expired");
+        }
+
+        // validacija amount i currency
+        double amount = Double.parseDouble(qrData.get("AMOUNT"));
+        if (!payment.getCurrency().equals(qrData.get("CUR")) || payment.getAmount() != amount) {
+            throw new IllegalArgumentException("QR payment data mismatch");
+        }
+
+        // validacija merchant account
+        Merchant merchant = payment.getMerchant();
+        if (!merchant.getAccountNumber().equals(qrData.get("ACC"))) {
+            throw new IllegalArgumentException("QR merchant account mismatch");
+        }
+
+        payment.setStatus(PaymentStatus.COMPLETED);
+        payment.setGlobalTransactionId(UUID.randomUUID().toString());
+        payment.setAcquirerTimestamp(LocalDateTime.now());
+        payment.setAttemptCount(1);
+
+        paymentRepository.save(payment);
+
+        return new PaymentResponse(
+                payment.getStatus(),
+                payment.getGlobalTransactionId(),
+                payment.getAcquirerTimestamp()
+        );
+    }
+
+    public QrPaymentResponse generateQr(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+
+        if (payment.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Payment expired");
+        }
+
+        Merchant m = payment.getMerchant();
+
+        String payload = String.format(
+                "IPS|PAYMENT|" +
+                        "MID=%d|" +
+                        "MERCHANT=%s|" +
+                        "ACC=%s|" +
+                        "AMOUNT=%.2f|" +
+                        "CUR=%s|" +
+                        "PID=%d",
+                m.getId(),
+                m.getName(),
+                m.getAccountNumber(),
+                payment.getAmount(),
+                payment.getCurrency(),
+                payment.getId()
+        );
+
+        return new QrPaymentResponse(payment.getId(), payload);
+    }
+
+    private Map<String, String> parseQrPayload(String payload) {
+        //IPS|PAYMENT|MID=123|MERCHANT=Shop|ACC=RS...|AMOUNT=1500.00|CUR=RSD|PID=1
+        String[] parts = payload.split("\\|");
+        if (parts.length < 2 || !"IPS".equals(parts[0]) || !"PAYMENT".equals(parts[1])) {
+            throw new IllegalArgumentException("Invalid QR format");
+        }
+
+        Map<String, String> map = new HashMap<>();
+        for (int i = 2; i < parts.length; i++) {
+            String[] kv = parts[i].split("=", 2);
+            if (kv.length != 2) {
+                throw new IllegalArgumentException("Invalid QR key-value: " + parts[i]);
+            }
+            map.put(kv[0], kv[1]);
+        }
+        return map;
+    }
+
     private void validatePan(String pan) {
         if (pan == null || !pan.matches("\\d{13,19}")) {
             throw new IllegalArgumentException("Invalid PAN format");
@@ -175,5 +270,13 @@ public class PaymentService {
         if (code == null || !code.matches("\\d{3,4}")) {
             throw new IllegalArgumentException("Invalid security code");
         }
+    }
+
+    private String resolveAccountFromPan(String pan) {
+        // simulacija bankarskog mapiranja
+        if (pan.startsWith("411111")) {
+            return "RS35105008123123123";
+        }
+        throw new IllegalArgumentException("Card not recognized");
     }
 }

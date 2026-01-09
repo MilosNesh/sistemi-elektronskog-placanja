@@ -24,12 +24,14 @@ public class Payment {
     private Merchant merchant;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    //@JoinColumn(name = "customer_id")
     private Customer customer;
 
     private Double amount;
     private String currency;
-    private String stan;
+
+    @Column(unique = true)
+    private String stan; // samo za karticu
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
