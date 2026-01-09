@@ -1,0 +1,20 @@
+<div class="payment-config-container">
+
+  <h1 class="payment-heading">Select payment method</h1>
+
+  <div class="payment-methods">
+    <div
+      class="payment-card"
+      *ngFor="let method of paymentMethods"
+      [attr.data-method]="method.type"
+      (click)="onPaymentMethodSelected(method)"
+    >
+      <img [src]="method.image || 'assets/default.png'" [alt]="method.type" />
+      <div class="payment-info">
+        <h3>{{ method.type }}</h3>
+        <p>{{ method.description }}</p>
+      </div>
+    </div>
+  </div>
+
+</div>
