@@ -1,0 +1,11 @@
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.hint {
+  color: #555;
+  font-size: 14px;
+}

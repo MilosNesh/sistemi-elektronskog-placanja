@@ -1,0 +1,15 @@
+<h2>QR plaćanje</h2>
+
+<div class="scanner-container">
+  <zxing-scanner
+    [formats]="['QR_CODE']"
+    (scanSuccess)="onScanSuccess($event)">
+  </zxing-scanner>
+
+  <!-- Vizuelni frejm -->
+  <div class="scan-frame"></div>
+</div>
+
+<p *ngIf="errorMessage" style="color:red">
+  {{ errorMessage }}
+</p>
