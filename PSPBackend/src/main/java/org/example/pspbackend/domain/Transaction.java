@@ -36,6 +36,23 @@ public class Transaction {
     @Column(name = "psp_timestamp")
     private Date pspTimestamp;
 
+    @Column(name = "payment_id")
+    private Long paymentId;
+
+    @Column(name = "acquirer_timestamp")
+    private Date acquirerTimestamp;
+
+    @Column(name = "global_transaction_id")
+    private String globalTransactionId;
+
+    @Column(name = "stan")
+    private String stan;
+
+    @Column(name = "status")
+    private String status;
+
+    public Transaction() {}
+
     public Transaction(Merchant merchant, double amount, String currency, Date merchantTimestamp, String merchantOrderId, Date pspTimestamp) {
         this.merchant = merchant;
         this.amount = amount;
@@ -70,5 +87,72 @@ public class Transaction {
 
     public Date getPspTimestamp() {
         return pspTimestamp;
+    }
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public Date getAcquirerTimestamp() {
+        return acquirerTimestamp;
+    }
+
+    public String getGlobalTransactionId() {
+        return globalTransactionId;
+    }
+
+    public String getStan() {
+        return stan;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public void setMerchantTimestamp(Date merchantTimestamp) {
+        this.merchantTimestamp = merchantTimestamp;
+    }
+
+    public void setMerchantOrderId(String merchantOrderId) {
+        this.merchantOrderId = merchantOrderId;
+    }
+
+    public void setPspTimestamp(Date pspTimestamp) {
+        this.pspTimestamp = pspTimestamp;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public void setAcquirerTimestamp(Date acquirerTimestamp) {
+        this.acquirerTimestamp = acquirerTimestamp;
+    }
+
+    public void setGlobalTransactionId(String globalTransactionId) {
+        this.globalTransactionId = globalTransactionId;
+    }
+
+    public void setStan(String stan) {
+        this.stan = stan;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

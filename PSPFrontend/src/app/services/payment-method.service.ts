@@ -20,9 +20,8 @@ export class PaymentMethodService {
   }
 
   public selectPaymentMethod(paymentMethod: PaymentMethod, transactionId: string) : Observable<string>{
-    return this.http.post<string>(`http://localhost:8080/payment/${transactionId}/execute`, {
-      paymentMethod: paymentMethod
-    }, { headers: this.authService.getHeaderToken() })
+    console.log("PAYMENT METHOD: ", paymentMethod);
+    return this.http.post<string>(`http://localhost:8080/payment/${transactionId}/make`, paymentMethod);
   }
 
 
