@@ -29,8 +29,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/merchant/login").permitAll()
                         .requestMatchers("/payment/merchant-request",
-                                "/payment/{transactionId}/make",
-                                "/payment-method/merchant/{id}").permitAll()
+                                "/payment/status",
+                                "/payment/*/make",
+                                "/payment-method/merchant/*").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess ->
@@ -44,7 +46,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200")
+                .allowedOrigins("https://localhost:4200")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .allowCredentials(true);

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -15,7 +16,7 @@ public class MerchantRequest {
     private double amount;
     private String currency;
     private String merchantOrderId;
-    private Date merchantTimestamp;
+    private LocalDateTime merchantTimestamp;
 
     public String getMerchantPassword() {
         return merchantPassword;
@@ -37,7 +38,7 @@ public class MerchantRequest {
         return merchantOrderId;
     }
 
-    public Date getMerchantTimestamp() {
+    public LocalDateTime getMerchantTimestamp() {
         return merchantTimestamp;
     }
 }

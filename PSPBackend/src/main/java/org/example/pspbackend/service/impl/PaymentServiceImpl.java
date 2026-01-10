@@ -4,8 +4,10 @@ import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
 import org.example.pspbackend.dto.MerchantRequest;
 import org.example.pspbackend.dto.PaymentMethodDTO;
+import org.example.pspbackend.repository.MerchantRepository;
 import org.example.pspbackend.dto.PaymentResponse;
 import org.example.pspbackend.repository.TransactionRepository;
+import org.example.pspbackend.service.CallMerchantApiService;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.PaymentService;
 import org.example.pspbackend.service.TransactionService;
@@ -21,17 +23,19 @@ import java.util.List;
 @Service
 public class PaymentServiceImpl implements PaymentService {
     @Autowired
+    private TransactionRepository transactionRepository;
+    @Autowired
+    private MerchantRepository merchantRepository;
+    @Autowired
     private TransactionService transactionService;
     @Autowired
     private DynamicPaymentProviderRegistryImpl registry;
     @Autowired
-    private CallMerchantApiServiceImpl callMerchantApiService;
+    private CallMerchantApiService callMerchantApiService;
     @Autowired
     private MerchantServiceImpl merchantService;
 
     private final List<PaymentProviderService> providers;
-    @Autowired
-    private CallMerchantApiServiceImpl callMerchantApiServiceImpl;
 
     public PaymentServiceImpl(List<PaymentProviderService> providers) {
         this.providers = providers;
@@ -59,7 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
         );
         transactionService.save(transaction);
 
-        return "http://localhost:4200/payment/" + transaction.getId() + "/" + merchant.getMerchantId();
+        return "https://localhost:4200/payment/" + transaction.getId() + "/" + merchant.getMerchantId();
     }
 
     public String executePayment(String transactionId, PaymentMethodDTO request) {
@@ -69,6 +73,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){
+        System.out.println("Prvi:  " + paymentResponse.getPspTimestamp());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date pspTimestamp;
         try {
@@ -85,6 +90,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         Transaction transaction = transactionService.get(paymentResponse.getStan(), paymentResponse.getMerchantId(), pspTimestamp);
 
+        System.out.println("Drugi: " + pspTimestamp);
         if(transaction == null){
             return;
         }
@@ -101,16 +107,16 @@ public class PaymentServiceImpl implements PaymentService {
 
         switch (paymentResponse.getStatus()){
             case "COMPLETED":
-                callMerchantApiServiceImpl.notifyPaymentSuccess(merchant.getSuccessUrl());
+                callMerchantApiService.notifyPaymentSuccess(merchant.getSuccessUrl(), transaction.getMerchantOrderId());
                 break;
             case "FAILED":
-                callMerchantApiService.notifyPaymentFailed(merchant.getFailedUrl());
+                callMerchantApiService.notifyPaymentFailed(merchant.getFailedUrl(), transaction.getMerchantOrderId());
                 break;
             case "EXPIRED":
-                callMerchantApiService.notifyPaymentError(merchant.getErrorUrl());
+                callMerchantApiService.notifyPaymentError(merchant.getErrorUrl(), transaction.getMerchantOrderId());
                 break;
             default:
-                callMerchantApiService.notifyPaymentError(merchant.getErrorUrl());
+                callMerchantApiService.notifyPaymentError(merchant.getErrorUrl(), transaction.getMerchantOrderId());
         }
     }
 

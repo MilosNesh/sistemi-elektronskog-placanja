@@ -1,5 +1,6 @@
 package org.example.pspbackend.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,6 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "transactions")
 public class Transaction {
@@ -28,12 +28,13 @@ public class Transaction {
     private String currency;
 
     @Column(name = "merchant_timestamp")
-    private Date merchantTimestamp;
+    private LocalDateTime merchantTimestamp;
 
     @Column(name = "merchant_order_id")
     private String merchantOrderId;
 
     @Column(name = "psp_timestamp")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date pspTimestamp;
 
     @Column(name = "payment_id")
@@ -53,12 +54,13 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(Merchant merchant, double amount, String currency, Date merchantTimestamp, String merchantOrderId, Date pspTimestamp) {
+    public Transaction(Merchant merchant, double amount, String currency, LocalDateTime merchantTimestamp, String merchantOrderId, Date pspTimestamp) {
         this.merchant = merchant;
         this.amount = amount;
         this.currency = currency;
         this.merchantTimestamp = merchantTimestamp;
         this.pspTimestamp = pspTimestamp;
+        this.merchantOrderId = merchantOrderId;
     }
 
     public String getId() {
@@ -77,7 +79,7 @@ public class Transaction {
         return currency;
     }
 
-    public Date getMerchantTimestamp() {
+    public LocalDateTime getMerchantTimestamp() {
         return merchantTimestamp;
     }
 
@@ -121,7 +123,7 @@ public class Transaction {
         this.currency = currency;
     }
 
-    public void setMerchantTimestamp(Date merchantTimestamp) {
+    public void setMerchantTimestamp(LocalDateTime merchantTimestamp) {
         this.merchantTimestamp = merchantTimestamp;
     }
 

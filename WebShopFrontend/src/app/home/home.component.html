@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="title">
+        <h1>Find the best car for you</h1>
+    </div>
+    <div class="search">
+        <label for="startDate">Start date</label>
+        <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="startDate"
+            [min]="minStartDate"
+            (change)="onStartDateChange()"
+        >
+
+        <label for="endDate">End date</label>
+        <input
+            type="date"
+            id="endDate"
+            [(ngModel)]="endDate"
+            [min]="minEndDate"
+        >
+
+        <button (click)="search()">Search</button>
+        <button (click)="ngOnInit()">Reset</button>
+
+    </div>
+    <div class="vehicles">
+        <div class="vehicle" *ngFor="let vehicle of vehicles">
+            <div class="image">
+                <img [src]="vehicle.image" alt="">
+            </div>
+            <div class="description">
+                <h1>{{vehicle.model}}</h1>
+                <p>{{ vehicle.description | slice:0:150 }}...</p>
+                <div class="price">
+                    <h2>{{vehicle.pricePerDay}}</h2>
+                    <h2>{{vehicle.currency}}</h2>
+                    <h2>&#47; Day</h2>
+                </div>
+                <button  [routerLink]="['/vehicle', vehicle.id]">More info</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -50,7 +50,7 @@ export class LoginComponent {
         localStorage.setItem("psp_token", res);
         this.authService.refreshToken();
         console.log("Email: ", this.authService.getEmail())
-        this.router.navigate(["payment-method"]);
+        this.router.navigate(["payment-method-config"]);
       },
       error: (err: HttpErrorResponse) => {
         this.errorMessage = err.error?.message || "Greška prilikom prijave.";

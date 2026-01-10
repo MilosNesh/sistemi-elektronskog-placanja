@@ -1,0 +1,83 @@
+<div class="container">
+    <div class="vehicle">
+        <div class="image">
+            <img [src]="vehicle.image" alt="">
+        </div>
+        <div class="description">
+            <h1>{{vehicle!.model}}</h1>
+            <p>{{vehicle!.description}}</p>
+            <div class="price">
+                <h2>{{vehicle!.pricePerDay}}</h2>
+                <h2>{{vehicle!.currency}}</h2>
+                <h2>&#47; Day</h2>
+            </div>
+            <button (click)="openReservationDetails()" *ngIf="!openReservation">Create reservation</button>
+        </div>
+    </div>
+
+    <div class="reservation" *ngIf="openReservation">
+        <div class="insurances">
+            <h2>Insurance</h2>
+
+            <select [(ngModel)]="selectedInsurance">
+                <option [ngValue]="null" selected>
+                    -- Select insurance --
+                </option>
+
+                <option *ngFor="let insurance of insurances"
+                        [ngValue]="insurance">
+                    {{ insurance.name }} -
+                    {{ insurance.pricePerDay }} {{ insurance.currency }} / day
+                </option>
+            </select>
+        </div>
+
+        <div class="additional-services">
+            <h2>Additional services</h2>
+
+            <div class="service"
+                *ngFor="let service of additionalServices">
+                <label>
+                    <input
+                        type="checkbox"
+                        [value]="service.id"
+                        (change)="onServiceChange(service, $event)"
+                    />
+                    {{ service.name }} -
+                    {{ service.price }} {{ service.currency }}
+                </label>
+            </div>
+        </div>
+      <div class="reservation-dates">
+        <label for="startDate">Start date</label>
+        <input
+            type="date"
+            id="startDate"
+            [(ngModel)]="startDate"
+            [min]="minStartDate"
+            (change)="onStartDateChange()"
+        >
+
+        <label for="endDate">End date</label>
+        <input
+            type="date"
+            id="endDate"
+            [(ngModel)]="endDate"
+            [min]="minEndDate"
+        >
+
+        <h1>Total price: {{ calculateTotalPrice() }} {{ vehicle!.currency }}</h1>
+
+        <button
+            (click)="createReservation()"
+            [disabled]="!isDateRangeValid()"
+        >
+            Save and Pay
+        </button>
+        </div>
+
+
+    </div>
+
+   
+</div>

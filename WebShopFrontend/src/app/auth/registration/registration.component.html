@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="overlay">
+    <div class="registration-container">
+      <h2>Registration</h2>
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+        
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name" required>
+          <mat-error *ngIf="registrationForm.controls['name'].invalid && registrationForm.controls['name'].touched">
+            Enter your name
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Surname</mat-label>
+          <input matInput formControlName="surname" required>
+          <mat-error *ngIf="registrationForm.controls['surname'].invalid && registrationForm.controls['surname'].touched">
+            Enter your surname
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email address</mat-label>
+          <input matInput formControlName="email" type="email" required>
+          <mat-error *ngIf="registrationForm.controls['email'].invalid && registrationForm.controls['email'].touched">
+            Enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required>
+          <mat-error *ngIf="registrationForm.get('password')?.hasError('required') && registrationForm.controls['password'].touched">
+            Enter a password
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Confirm password</mat-label>
+          <input matInput formControlName="confirmPassword" type="password" required>
+          <mat-error *ngIf="registrationForm.get('confirmPassword')?.hasError('required') && registrationForm.controls['confirmPassword'].touched">
+            Enter a confirm password
+          </mat-error>
+          <mat-error *ngIf="registrationForm.get('confirmPassword')?.hasError('passwordsMismatch') && registrationForm.controls['confirmPassword'].touched">
+            Passwords mismatch
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="registrationForm.invalid">Sign up</button>
+      </form>
+    </div>
+  </div>  
+</div>

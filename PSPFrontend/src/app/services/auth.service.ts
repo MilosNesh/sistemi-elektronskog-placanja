@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { LoginDetails } from "../models/login-details.model"
 import { Observable, BehaviorSubject } from "rxjs"
 import { jwtDecode } from 'jwt-decode';
+import { enivironment } from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class AuthService {
   }
 
   public login(loginDetails: LoginDetails) : Observable<string> {
-    return this.http.post("http://localhost:8080/merchant/login", loginDetails, {responseType: 'text'});
+    return this.http.post(`${enivironment.backenUrl}/merchant/login`, loginDetails, {responseType: 'text'});
   }
 
   public getToken() : string {
