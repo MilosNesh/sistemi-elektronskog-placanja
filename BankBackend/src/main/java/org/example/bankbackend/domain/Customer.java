@@ -16,12 +16,13 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String email;
 
-    @Column(unique = true)
-    private String pan;
+    //@Column(unique = true)
+    //private String pan;
 
     private Double balance;
+
+    private String accountNumber;
 }

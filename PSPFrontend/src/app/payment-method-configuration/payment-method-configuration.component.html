@@ -1,0 +1,42 @@
+<div class="payment-config-container">
+
+<div *ngIf="feedbackMessage" class="feedback">
+  {{ feedbackMessage }}
+</div>
+
+ <div class="payment-methods">
+  <div class="payment-card" *ngFor="let method of paymentMethods" [attr.data-method]="method.type">
+    <img [src]="method.image || 'assets/default.png'" [alt]="method.type" />
+    <div class="payment-info">
+      <h3>{{ method.type }}</h3>
+      <p>{{ method.description }}</p>
+    </div>
+    <label class="payment-label">
+      <input type="checkbox"
+             [checked]="isMethodEnabled(method.paymentMethodId)"
+             (change)="togglePaymentMethod(method.paymentMethodId, $event)" />
+    </label>
+  </div>
+</div>
+
+  <div class="callback-urls">
+    <div class="form-group">
+      <label for="successUrl">Success URL</label>
+      <input type="url" id="successUrl" placeholder="https://merchant.com/success" />
+    </div>
+
+    <div class="form-group">
+      <label for="failUrl">Fail URL</label>
+      <input type="url" id="failUrl" placeholder="https://merchant.com/fail" />
+    </div>
+
+    <div class="form-group">
+      <label for="errorUrl">Error URL</label>
+      <input type="url" id="errorUrl" placeholder="https://merchant.com/error" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="submitBtn" (click)="saveMerchant()">Save merchant options</button>
+  </div>
+</div>
