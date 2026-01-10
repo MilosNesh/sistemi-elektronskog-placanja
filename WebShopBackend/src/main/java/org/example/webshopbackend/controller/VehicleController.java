@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class VehicleController {
         if (reservation == null) {
             return ResponseEntity.badRequest().build();
         }
-        MerchantRequest merchantRequest = new MerchantRequest(merchantId, merchantPassword, reservation.getTotalPrice(), reservation.getCurrency(), reservation.getId().toString(), Date.valueOf(LocalDate.now()));
+        MerchantRequest merchantRequest = new MerchantRequest(merchantId, merchantPassword, reservation.getTotalPrice(), reservation.getCurrency(), reservation.getId().toString(), LocalDateTime.now());
         String url = callApiService.callApi(merchantRequest);
 
         return ResponseEntity.ok(url);

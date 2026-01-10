@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +18,6 @@ public class MerchantRequest {
     private double amount;
     private String currency;
     private String merchantOrderId;
-    private Date merchantTimestamp;
+    private LocalDateTime merchantTimestamp;
 
 }

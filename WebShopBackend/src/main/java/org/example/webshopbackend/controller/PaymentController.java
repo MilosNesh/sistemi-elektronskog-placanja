@@ -17,21 +17,22 @@ public class PaymentController {
     @Autowired
     private ReservationService reservationService;
 
-    @GetMapping("/success/{id}")
-    public ResponseEntity<Void> success(@PathVariable UUID id) {
-        reservationService.update(id, PaymentStatus.PAID);
+    @PostMapping("/success")
+    public ResponseEntity<Void> success(@RequestBody String id) {
+        id = id.replace("\"", "").trim();
+        reservationService.update(UUID.fromString(id), PaymentStatus.PAID);
 
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://localhost:4300/payment/success/"+id)).build();
     }
 
-    @GetMapping("/fail/{id}")
-    public ResponseEntity<Void> fail(@PathVariable UUID id) {
+    @GetMapping("/fail")
+    public ResponseEntity<Void> fail(@RequestBody UUID id) {
         reservationService.update(id, PaymentStatus.NOT_PAID);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://localhost:4300/payment/fail/"+id)).build();
     }
 
-    @GetMapping("/error/{id}")
-    public ResponseEntity<Void> error(@PathVariable UUID id) {
+    @GetMapping("/error")
+    public ResponseEntity<Void> error(@RequestBody UUID id) {
         reservationService.update(id, PaymentStatus.ERROR);
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://localhost:4300/payment/error/"+id)).build();
     }

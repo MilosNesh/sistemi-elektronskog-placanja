@@ -10,10 +10,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 public class CallApiServiceImpl implements CallApiService {
 
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient;
 
     @Value("${psp.url}")
     private String url;
+
+    public CallApiServiceImpl(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     public String callApi(MerchantRequest merchantRequest) {
         return webClient

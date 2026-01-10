@@ -2,7 +2,7 @@ package org.example.pspbackend.service;
 
 public interface CallMerchantApiService
 {
-    public void notifyPaymentSuccess(String successUrl);
-    public void notifyPaymentFailed(String failedUrl);
-    public void notifyPaymentError(String errorUrl);
+    public void notifyPaymentSuccess(String successUrl, String merchantOrderId);
+    public void notifyPaymentFailed(String failedUrl, String merchantOrderId);
+    public void notifyPaymentError(String errorUrl, String merchantOrderId);
 }
