@@ -2,7 +2,10 @@ package org.example.pspbackend.controller;
 
 import org.example.pspbackend.dto.MerchantRequest;
 import org.example.pspbackend.dto.PaymentMethodDTO;
+import org.example.pspbackend.dto.PaymentResponse;
+import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.PaymentService;
+import org.example.pspbackend.service.impl.DynamicPaymentProviderRegistryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +18,14 @@ import java.util.Map;
 public class PaymentController {
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private DynamicPaymentProviderRegistryImpl registry;
+
 
     @PostMapping("/merchant-request")
-    public ResponseEntity<String> createPayment(@RequestBody MerchantRequest request) {
-
+    public ResponseEntity<String> createPaymentUrl(@RequestBody MerchantRequest request)
+    {
         String redirectUrl = paymentService.generatePaymentUrl(request);
-
         return ResponseEntity.ok(redirectUrl);
     }
 
@@ -29,9 +34,27 @@ public class PaymentController {
             @PathVariable String transactionId,
             @RequestBody PaymentMethodDTO request
     ) {
+        System.out.println("RRRRR: " + request.getType() + " id: " + request.getPaymentMethodId() + " transactionId: " + transactionId);
         String redirectUrl = paymentService.executePayment(transactionId, request);
-
-        // Vrati redirect URL frontend-u
         return ResponseEntity.ok(redirectUrl);
     }
+
+    @PostMapping("/status")
+    public ResponseEntity<String> receivePaymentStatus(
+            @RequestBody PaymentResponse response
+    ) {
+        paymentService.sendPaymentStatusToMerchant(response);
+        return ResponseEntity.ok("Payment status successfully received");
+    }
+
+    @PostMapping("/add-payment-provider")
+    public ResponseEntity<String> addProvider(@RequestParam String className) throws Exception {
+        Class<?> clazz = Class.forName(className);
+        PaymentProviderService provider = (PaymentProviderService) clazz.newInstance();
+
+        registry.addProvider(provider);
+
+        return ResponseEntity.ok( "" + className + " added!");
+    }
+
 }
