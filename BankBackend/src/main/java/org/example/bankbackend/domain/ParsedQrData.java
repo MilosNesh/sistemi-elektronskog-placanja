@@ -1,10 +1,13 @@
 package org.example.bankbackend.domain;
 
-public record ParsedQrData (
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+public record ParsedQrData(
         String currency,
-        Double amount,
+        double amount,
         String receiverAccount,
-        String receiverName,
-        Long paymentId
-){
-}
+        String merchantName,
+        String purpose
+) {}
+

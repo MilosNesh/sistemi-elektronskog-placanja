@@ -14,4 +14,7 @@ public class PaymentResponse {
     private PaymentStatus status;
     private String globalTransactionId;
     private LocalDateTime acquirerTimestamp;
+    private String pspTimestamp;
+    private String stan;
+    private Long merchantId;
 }

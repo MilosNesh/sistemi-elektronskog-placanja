@@ -48,4 +48,6 @@ public class Payment {
     private String globalTransactionId;
 
     private LocalDateTime acquirerTimestamp;
+
+    private String pspTimestamp;
 }

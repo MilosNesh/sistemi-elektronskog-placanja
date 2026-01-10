@@ -40,7 +40,8 @@ public class PaymentController {
     }
 
     @PostMapping("/{paymentId}/qr-pay")
-    public ResponseEntity<PaymentResponse> payQr(@RequestBody QrPaymentRequest request) {
-        return ResponseEntity.ok(paymentService.processQrPayment(request));
+    public ResponseEntity<PaymentResponse> payQr(@PathVariable Long paymentId,
+            @RequestBody QrPaymentRequest request) {
+        return ResponseEntity.ok(paymentService.processQrPayment(paymentId, request));
     }
 }

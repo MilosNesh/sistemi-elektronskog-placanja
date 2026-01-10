@@ -25,4 +25,7 @@ public class Customer {
     private Double balance;
 
     private String accountNumber;
+
+    @Column(length = 4, nullable = false)
+    private String cardLast4;
 }
