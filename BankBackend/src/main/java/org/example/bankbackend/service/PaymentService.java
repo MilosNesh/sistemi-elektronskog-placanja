@@ -187,14 +187,18 @@ public class PaymentService {
 
         Merchant merchant = payment.getMerchant();
 
-        return String.format(
-                "K:PR|V:01|C:%s|I:%s%.2f|R:%s|N:%s|P:Placanje|S:%d",
-                payment.getCurrency(),
-                payment.getCurrency(),
-                payment.getAmount(),
-                merchant.getAccountNumber(),
-                merchant.getName(),
-                payment.getId()
+        String amount = String.format("%.2f", payment.getAmount()).replace(".",",");
+
+        return String.join("|",
+                "K:PR",
+                "V:01",
+                "C:1",// znakovni skup (1 - UTF-8) //+ payment.getCurrency(),
+                "R:" + merchant.getAccountNumber(),
+                "N:" + merchant.getName(),
+                "I:" + payment.getCurrency() + amount,
+                "SF:289",
+                "S:Placanje putem QR"
+                //"RO:" + payment.getId()
         );
     }
 
