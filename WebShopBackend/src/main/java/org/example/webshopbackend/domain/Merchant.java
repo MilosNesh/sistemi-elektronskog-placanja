@@ -22,4 +22,7 @@ public class Merchant {
 
     @Column(name = "merchant_password")
     private String merchantPassword;
+
+    @Column(name = "url")
+    private String url;
 }

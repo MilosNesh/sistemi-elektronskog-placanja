@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { LoginDetails } from '../models/login-details.model';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +18,11 @@ export class AuthService {
   }
 
   public login(loginDetails: LoginDetails) : Observable<string> {
-    return this.http.post("http://localhost:8070/user/login", loginDetails, {responseType: 'text'});
+    return this.http.post(`${environment.backendUrl}/user/login`, loginDetails, {responseType: 'text'});
   }
   
   public register(user: User) : Observable<User> {
-    return this.http.post<User>("http://localhost:8070/user/register", user);
+    return this.http.post<User>(`${environment.backendUrl}/user/register`, user);
   }
 
   public getToken() : string {

@@ -4,6 +4,7 @@ import org.example.webshopbackend.domain.*;
 import org.example.webshopbackend.dto.*;
 import org.example.webshopbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +30,10 @@ public class VehicleController {
     private UserService userService;
     @Autowired
     private CallApiService callApiService;
+    @Value("${psp.merchant_id}")
+    private Long merchantId;
+    @Value("${psp.merchant_password}")
+    private String merchantPassword;
 
     @GetMapping("/")
     public ResponseEntity<List<VehicleDTO>> getAll() {
@@ -91,10 +96,10 @@ public class VehicleController {
         Reservation reservation = new Reservation(reservationDTO);
         reservation.setUser(user);
         reservation = reservationService.save(reservation);
-//        if (reservation == null) {
-//            return ResponseEntity.badRequest().build();
-//        }
-        MerchantRequest merchantRequest = new MerchantRequest(1L, "$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm", 200, "RSD", "1", Date.valueOf(LocalDate.now()));
+        if (reservation == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        MerchantRequest merchantRequest = new MerchantRequest(merchantId, merchantPassword, reservation.getTotalPrice(), reservation.getCurrency(), reservation.getId().toString(), Date.valueOf(LocalDate.now()));
         String url = callApiService.callApi(merchantRequest);
 
         return ResponseEntity.ok(url);
