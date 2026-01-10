@@ -1,9 +1,6 @@
 package org.example.webshopbackend.service.impl;
 
-import org.example.webshopbackend.domain.AdditionalService;
-import org.example.webshopbackend.domain.Reservation;
-import org.example.webshopbackend.domain.User;
-import org.example.webshopbackend.domain.Vehicle;
+import org.example.webshopbackend.domain.*;
 import org.example.webshopbackend.repository.ReservationRepository;
 import org.example.webshopbackend.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -44,13 +42,22 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation get(Long id) {
+    public Reservation get(UUID id) {
         return reservationRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<Reservation> getForUser(User user) {
         return reservationRepository.findByUser(user);
+    }
+
+    @Override
+    public Reservation update(UUID id, PaymentStatus paymentStatus) {
+        Reservation reservation = get(id);
+        if(reservation == null)
+            return null;
+        reservation.setPaymentStatus(paymentStatus);
+        return reservationRepository.save(reservation);
     }
 
     private boolean isAvailable(Vehicle vehicle, Date from, Date to) {

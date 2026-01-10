@@ -30,7 +30,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/register", "/user/login").permitAll()
+                        .requestMatchers("/user/register", "/user/login", "/payment/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess ->
