@@ -15,7 +15,7 @@ public class CallBankApiServiceImpl implements CallBankApiService {
     public PaymentInitResponse createPaymentInitRequest(PaymentInitRequest paymentInitRequest, String signature){
         return webClient
                 .post()
-                .uri("http://localhost:8443/init")
+                .uri("https://localhost:8443/init")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("X-PSP-SIGNATURE", signature)
                 .bodyValue(paymentInitRequest)

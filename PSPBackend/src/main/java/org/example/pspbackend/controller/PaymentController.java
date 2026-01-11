@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "payment", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/payment", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PaymentController {
     @Autowired
     private PaymentService paymentService;

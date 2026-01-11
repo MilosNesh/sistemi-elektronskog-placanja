@@ -32,6 +32,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 "/payment/status",
                                 "/payment/*/make",
                                 "/payment-method/merchant/*").permitAll()
+                        .requestMatchers("/payments").permitAll()
 
                         .anyRequest().authenticated()
                 )

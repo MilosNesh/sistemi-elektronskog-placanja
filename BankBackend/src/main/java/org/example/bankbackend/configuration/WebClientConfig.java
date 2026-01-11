@@ -1,4 +1,4 @@
-package org.example.pspbackend.config;
+package org.example.bankbackend.configuration;
 
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -19,18 +19,23 @@ public class WebClientConfig {
 
     @Bean
     public WebClient webClient() throws Exception {
+        // učitaj root CA crt iz resources
+        InputStream caInput = getClass().getClassLoader().getResourceAsStream("sepCA.crt");
+        if (caInput == null) throw new RuntimeException("root-ca.crt not found");
 
-        // Učitaj truststore koji sadrži SEP CA i/ili Bank sertifikat
-        KeyStore trustStore = KeyStore.getInstance("PKCS12");
-        try (InputStream trustStream = getClass().getClassLoader().getResourceAsStream("truststore.p12")) {
-            if (trustStream == null) throw new RuntimeException("truststore.p12 not found");
-            trustStore.load(trustStream, "JakaSifr@1".toCharArray());
-        }
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        X509Certificate caCert = (X509Certificate) cf.generateCertificate(caInput);
 
+        // napravi KeyStore u memoriji
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        trustStore.load(null, null); // prazni KeyStore
+        trustStore.setCertificateEntry("my-root-ca", caCert);
+
+        // TrustManagerFactory
         TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         tmf.init(trustStore);
 
-        // Netty SSL Context
+        // Netty SslContext
         SslContext sslContext = SslContextBuilder.forClient()
                 .trustManager(tmf)
                 .build();

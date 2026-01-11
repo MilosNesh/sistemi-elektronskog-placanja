@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -75,8 +76,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){
 
+        Instant instant = Instant.parse(paymentResponse.getPspTimestamp());
         System.out.println("Prvi:  " + paymentResponse.getPspTimestamp());
-        LocalDateTime pspTimestamp = LocalDateTime.parse(paymentResponse.getPspTimestamp());
+        LocalDateTime pspTimestamp = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
         Transaction transaction1 = transactionService.getByStan(paymentResponse.getStan());
         System.out.println("Iz baze: " + transaction1.getStan() + " | " + transaction1.getMerchant().getMerchantId() + " | " + transaction1.getPspTimestamp());

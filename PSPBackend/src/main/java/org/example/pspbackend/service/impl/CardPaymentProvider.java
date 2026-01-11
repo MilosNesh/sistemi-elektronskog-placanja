@@ -1,7 +1,6 @@
 package org.example.pspbackend.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.pspbackend.component.HmacUtil;
 import org.example.pspbackend.component.StanGenerator;
 import org.example.pspbackend.domain.Transaction;
@@ -12,6 +11,7 @@ import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class CardPaymentProvider implements PaymentProviderService {
@@ -46,11 +46,7 @@ public class CardPaymentProvider implements PaymentProviderService {
         );
 
         String json;
-        try {
-            json = objectMapper.writeValueAsString(paymentInitRequest);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("JSON serialization failed", e);
-        }
+        json = objectMapper.writeValueAsString(paymentInitRequest);
 
         String hmacData = hmacUtil.generateHmac(json);
         PaymentInitResponse paymentInitResponse = callBankApiService.createPaymentInitRequest(paymentInitRequest, hmacData);
