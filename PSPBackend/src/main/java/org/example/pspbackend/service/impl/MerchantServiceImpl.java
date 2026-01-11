@@ -37,6 +37,7 @@ public class MerchantServiceImpl implements MerchantService {
         merchant.setSuccessUrl(merchantDTO.getSuccessUrl());
         merchant.setFailedUrl(merchantDTO.getFailedUrl());
         merchant.setErrorUrl(merchantDTO.getErrorUrl());
+        merchantRepository.save(merchant);
 
         Map<Long, MerchantPaymentMethod> existing = merchant.getMerchantPaymentMethods()
                 .stream()

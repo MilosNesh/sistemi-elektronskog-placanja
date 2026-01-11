@@ -36,11 +36,12 @@ public class CardPaymentProvider implements PaymentProviderService {
     public String processPayment(String transactionId, PaymentMethodDTO request) {
         Transaction transaction = transactionService.getById(transactionId);
 
+        String stan = stanGenerator.generateStan();
         PaymentInitRequest paymentInitRequest = new PaymentInitRequest(
                 transaction.getMerchant().getMerchantId(),
                 transaction.getAmount(),
                 transaction.getCurrency(),
-                stanGenerator.generateStan(),
+                stan,
                 transaction.getPspTimestamp().toString()
         );
 
@@ -55,6 +56,7 @@ public class CardPaymentProvider implements PaymentProviderService {
         PaymentInitResponse paymentInitResponse = callBankApiService.createPaymentInitRequest(paymentInitRequest, hmacData);
 
         transaction.setPaymentId(paymentInitResponse.getPaymentId());
+        transaction.setStan(stan);
         transactionService.save(transaction);
 
         return paymentInitResponse.getPaymentUrl();

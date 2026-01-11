@@ -34,14 +34,13 @@ public class Transaction {
     private String merchantOrderId;
 
     @Column(name = "psp_timestamp")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date pspTimestamp;
+    private LocalDateTime pspTimestamp;
 
     @Column(name = "payment_id")
     private Long paymentId;
 
     @Column(name = "acquirer_timestamp")
-    private Date acquirerTimestamp;
+    private LocalDateTime acquirerTimestamp;
 
     @Column(name = "global_transaction_id")
     private String globalTransactionId;
@@ -54,7 +53,7 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(Merchant merchant, double amount, String currency, LocalDateTime merchantTimestamp, String merchantOrderId, Date pspTimestamp) {
+    public Transaction(Merchant merchant, double amount, String currency, LocalDateTime merchantTimestamp, String merchantOrderId, LocalDateTime pspTimestamp) {
         this.merchant = merchant;
         this.amount = amount;
         this.currency = currency;
@@ -87,7 +86,7 @@ public class Transaction {
         return merchantOrderId;
     }
 
-    public Date getPspTimestamp() {
+    public LocalDateTime getPspTimestamp() {
         return pspTimestamp;
     }
 
@@ -95,7 +94,7 @@ public class Transaction {
         return paymentId;
     }
 
-    public Date getAcquirerTimestamp() {
+    public LocalDateTime getAcquirerTimestamp() {
         return acquirerTimestamp;
     }
 
@@ -131,7 +130,7 @@ public class Transaction {
         this.merchantOrderId = merchantOrderId;
     }
 
-    public void setPspTimestamp(Date pspTimestamp) {
+    public void setPspTimestamp(LocalDateTime pspTimestamp) {
         this.pspTimestamp = pspTimestamp;
     }
 
@@ -139,7 +138,7 @@ public class Transaction {
         this.paymentId = paymentId;
     }
 
-    public void setAcquirerTimestamp(Date acquirerTimestamp) {
+    public void setAcquirerTimestamp(LocalDateTime acquirerTimestamp) {
         this.acquirerTimestamp = acquirerTimestamp;
     }
 

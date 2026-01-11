@@ -25,15 +25,19 @@ public class PaymentController {
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://localhost:4300/payment/success/"+id)).build();
     }
 
-    @GetMapping("/fail")
-    public ResponseEntity<Void> fail(@RequestBody UUID id) {
-        reservationService.update(id, PaymentStatus.NOT_PAID);
+    @PostMapping("/fail")
+    public ResponseEntity<Void> fail(@RequestBody String id) {
+        id = id.replace("\"", "").trim();
+        reservationService.update(UUID.fromString(id), PaymentStatus.NOT_PAID);
+
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://localhost:4300/payment/fail/"+id)).build();
     }
 
-    @GetMapping("/error")
-    public ResponseEntity<Void> error(@RequestBody UUID id) {
-        reservationService.update(id, PaymentStatus.ERROR);
+    @PostMapping("/error")
+    public ResponseEntity<Void> error(@RequestBody String id) {
+        id = id.replace("\"", "").trim();
+        reservationService.update(UUID.fromString(id), PaymentStatus.ERROR);
+
         return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("https://localhost:4300/payment/error/"+id)).build();
     }
 

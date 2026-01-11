@@ -5,11 +5,13 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { PaymentMethod } from '../models/payment-method.model';
 import { PaymentMethodService } from '../services/payment-method.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-payment-method-configuration',
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl: './payment-method-configuration.component.html',
   styleUrl: './payment-method-configuration.component.css'

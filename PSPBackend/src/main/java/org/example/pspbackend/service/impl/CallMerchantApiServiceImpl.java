@@ -12,7 +12,11 @@ import java.util.Map;
 
 @Service
 public class CallMerchantApiServiceImpl implements CallMerchantApiService {
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient;
+
+    public CallMerchantApiServiceImpl(WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     public void notifyPaymentSuccess(String successUrl, String merchantOrderId) {
         webClient.post()

@@ -24,5 +24,4 @@ export class PaymentMethodService {
     return this.http.post<string>(`${enivironment.backenUrl}/payment/${transactionId}/make`, paymentMethod);
   }
 
-
 }

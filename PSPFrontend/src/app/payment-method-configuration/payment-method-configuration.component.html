@@ -22,17 +22,20 @@
   <div class="callback-urls">
     <div class="form-group">
       <label for="successUrl">Success URL</label>
-      <input type="url" id="successUrl" placeholder="https://merchant.com/success" />
+      <input type="url" id="successUrl" placeholder="https://merchant.com/success"
+          [(ngModel)]="merchant.successUrl" name="successUrl" />
     </div>
 
     <div class="form-group">
       <label for="failUrl">Fail URL</label>
-      <input type="url" id="failUrl" placeholder="https://merchant.com/fail" />
+      <input type="url" id="failUrl" placeholder="https://merchant.com/fail"
+          [(ngModel)]="merchant.failedUrl" name="failedUrl"/>
     </div>
 
     <div class="form-group">
       <label for="errorUrl">Error URL</label>
-      <input type="url" id="errorUrl" placeholder="https://merchant.com/error" />
+      <input type="url" id="errorUrl" placeholder="https://merchant.com/error"
+          [(ngModel)]="merchant.errorUrl" name="errorUrl" />
     </div>
   </div>
 
