@@ -14,4 +14,10 @@ public class PaymentResponse {
     private PaymentStatus status;
     private String globalTransactionId;
     private LocalDateTime acquirerTimestamp;
+
+    public PaymentResponse(PaymentStatus status, String globalTransactionId, LocalDateTime acquirerTimestamp) {
+        this.status = status;
+        this.globalTransactionId = globalTransactionId;
+        this.acquirerTimestamp = acquirerTimestamp;
+    }
 }

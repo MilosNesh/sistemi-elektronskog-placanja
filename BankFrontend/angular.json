@@ -56,6 +56,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
@@ -65,7 +66,13 @@
               "buildTarget": "BankFrontend:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "ssl": true,
+              "sslCert": "certs/bank_fe.crt",
+              "sslKey": "certs/bank_fe.key",
+              "port": 4100
+          }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"

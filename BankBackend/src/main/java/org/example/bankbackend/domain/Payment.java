@@ -46,4 +46,100 @@ public class Payment {
     private String globalTransactionId;
 
     private LocalDateTime acquirerTimestamp;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Merchant getMerchant() {
+        return merchant;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getStan() {
+        return stan;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public Integer getAttemptCount() {
+        return attemptCount;
+    }
+
+    public String getGlobalTransactionId() {
+        return globalTransactionId;
+    }
+
+    public LocalDateTime getAcquirerTimestamp() {
+        return acquirerTimestamp;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMerchant(Merchant merchant) {
+        this.merchant = merchant;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public void setStan(String stan) {
+        this.stan = stan;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public void setAttemptCount(Integer attemptCount) {
+        this.attemptCount = attemptCount;
+    }
+
+    public void setGlobalTransactionId(String globalTransactionId) {
+        this.globalTransactionId = globalTransactionId;
+    }
+
+    public void setAcquirerTimestamp(LocalDateTime acquirerTimestamp) {
+        this.acquirerTimestamp = acquirerTimestamp;
+    }
 }

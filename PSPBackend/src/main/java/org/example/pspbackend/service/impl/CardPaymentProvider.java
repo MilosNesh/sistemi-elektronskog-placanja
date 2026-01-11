@@ -53,6 +53,8 @@ public class CardPaymentProvider implements PaymentProviderService {
         }
 
         String hmacData = hmacUtil.generateHmac(json);
+        System.out.println("HMAC: " + hmacData);
+
         PaymentInitResponse paymentInitResponse = callBankApiService.createPaymentInitRequest(paymentInitRequest, hmacData);
 
         transaction.setPaymentId(paymentInitResponse.getPaymentId());

@@ -25,6 +25,7 @@ public class PspRequestController {
             @RequestBody PaymentInitRequest request,
             @RequestHeader("X-PSP-SIGNATURE") String signature
             ){
+        System.out.println("HMAC: " + signature);
         pspAuthService.validateRequest(request, signature);
         PaymentInitResponse response = paymentService.initPayment(request);
         return ResponseEntity.ok(response);
