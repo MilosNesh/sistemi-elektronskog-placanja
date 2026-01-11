@@ -53,13 +53,14 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(Merchant merchant, double amount, String currency, LocalDateTime merchantTimestamp, String merchantOrderId, LocalDateTime pspTimestamp) {
+    public Transaction(Merchant merchant, double amount, String currency, LocalDateTime merchantTimestamp, String merchantOrderId, LocalDateTime pspTimestamp, String  stan) {
         this.merchant = merchant;
         this.amount = amount;
         this.currency = currency;
         this.merchantTimestamp = merchantTimestamp;
         this.pspTimestamp = pspTimestamp;
         this.merchantOrderId = merchantOrderId;
+        this.stan = stan;
     }
 
     public String getId() {

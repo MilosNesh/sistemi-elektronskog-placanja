@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,6 +97,7 @@ public class VehicleController {
 
         Reservation reservation = new Reservation(reservationDTO);
         reservation.setUser(user);
+        reservation.setPaymentStatus(PaymentStatus.IN_PROGRESS);
         reservation = reservationService.save(reservation);
         if (reservation == null) {
             return ResponseEntity.badRequest().build();
@@ -120,5 +122,10 @@ public class VehicleController {
             reservationDTOs.add(new ReservationDTO(reservation));
         }
         return ResponseEntity.ok(reservationDTOs);
+    }
+
+    @GetMapping("/reservation/{id}")
+    public ResponseEntity<ReservationDTO> getById(@PathVariable UUID id){
+        return ResponseEntity.ok(new ReservationDTO(reservationService.get(id)));
     }
 }

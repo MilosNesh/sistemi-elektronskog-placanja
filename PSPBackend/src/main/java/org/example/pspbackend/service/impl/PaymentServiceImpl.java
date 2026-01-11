@@ -1,5 +1,6 @@
 package org.example.pspbackend.service.impl;
 
+import org.example.pspbackend.component.StanGenerator;
 import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
 import org.example.pspbackend.dto.MerchantRequest;
@@ -35,7 +36,8 @@ public class PaymentServiceImpl implements PaymentService {
     private CallMerchantApiService callMerchantApiService;
     @Autowired
     private MerchantServiceImpl merchantService;
-
+    @Autowired
+    private StanGenerator stanGenerator;
     private final List<PaymentProviderService> providers;
 
     public PaymentServiceImpl(List<PaymentProviderService> providers) {
@@ -60,7 +62,9 @@ public class PaymentServiceImpl implements PaymentService {
                 merchantRequest.getCurrency(),
                 merchantRequest.getMerchantTimestamp(),
                 merchantRequest.getMerchantOrderId(),
-                pspTimestamp
+                pspTimestamp,
+                stanGenerator.generateStan()
+
         );
         transactionService.save(transaction);
 
@@ -78,9 +82,9 @@ public class PaymentServiceImpl implements PaymentService {
         System.out.println("Prvi:  " + paymentResponse.getPspTimestamp());
         LocalDateTime pspTimestamp = LocalDateTime.parse(paymentResponse.getPspTimestamp());
 
-        Transaction transaction1 = transactionService.getByStan(paymentResponse.getStan());
-        System.out.println("Iz baze: " + transaction1.getStan() + " | " + transaction1.getMerchant().getMerchantId() + " | " + transaction1.getPspTimestamp());
-        Transaction transaction = transactionService.get(paymentResponse.getStan(), paymentResponse.getMerchantId(), pspTimestamp);
+        Transaction transaction = transactionService.getByStan(paymentResponse.getStan());
+//        System.out.println("Iz baze: " + transaction1.getStan() + " | " + transaction1.getMerchant().getMerchantId() + " | " + transaction1.getPspTimestamp());
+//        Transaction transaction = transactionService.get(paymentResponse.getStan(), paymentResponse.getMerchantId(), pspTimestamp);
         System.out.println("Iz responsa: " + paymentResponse.getStan() + " | " + paymentResponse.getMerchantId() + " | " + pspTimestamp);
 
         System.out.println("Drugi: " + pspTimestamp);

@@ -42,4 +42,8 @@ export class VehicleService {
   public search(from: string, to: string) : Observable<Vehicle[]> {
     return this.http.get<Vehicle[]>(`${environment.backendUrl}/vehicle/available/${from}/${to}`, { headers: this.authService.getHeaderToken() });
   }
+
+  public getReservation(id: string) : Observable<Reservation> {
+    return this.http.get<Reservation>(`${environment.backendUrl}/vehicle/reservation/${id}`, { headers: this.authService.getHeaderToken() });
+  }
 }

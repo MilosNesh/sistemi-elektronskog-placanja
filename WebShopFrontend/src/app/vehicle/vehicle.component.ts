@@ -7,6 +7,7 @@ import { AdditionalService } from '../models/additional-service.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Reservation } from '../models/reservation.model';
+import { PaymentStatus } from '../models/payment-status.enum';
 
 @Component({
   selector: 'app-vehicle',
@@ -128,7 +129,7 @@ export class VehicleComponent {
       currency: this.vehicle.currency,
       dateFrom: this.startDate,
       dateTo: this.endDate,
-      paymentStatus: 0,
+      paymentStatus: PaymentStatus.IN_PROGRESS,
       userDTO:  null,
       vehicleDTO: this.vehicle,
       insuranceDTO: this.selectedInsurance,

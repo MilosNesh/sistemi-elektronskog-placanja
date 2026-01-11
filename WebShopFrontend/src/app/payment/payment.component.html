@@ -1,4 +1,7 @@
-<h2 *ngIf="status === 'success'">✅ Plaćanje uspešno</h2>
-<h2 *ngIf="status === 'fail'">Placanje nije izvrseno</h2>
-<h2 *ngIf="status === 'error'">Doslo je do grske pri placanju</h2>
-<p>Rezervacija ID: {{ id }}</p>
+<div class="body">
+    <h1 *ngIf="reservation === null">Payment error</h1>
+    <h1 *ngIf="reservation !== null">Payment status: </h1>
+    <h1>{{reservation?.paymentStatus}}</h1>
+    <h2>{{reservation?.vehicleDTO?.model}}</h2>
+    <h2>{{reservation?.totalPrice}} {{reservation?.currency}}</h2>
+</div>

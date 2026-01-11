@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { VehicleService } from '../vehicle.service';
 import { Reservation } from '../models/reservation.model';
 import { CommonModule } from '@angular/common';
+import { PaymentStatus } from '../models/payment-status.enum';
 
 @Component({
   selector: 'app-reservations',
@@ -34,7 +35,7 @@ export class ReservationsComponent {
   isActive(reservation: Reservation): boolean {
     var dateFrom = new Date(reservation.dateFrom);
     var dateTo = new Date(reservation.dateTo);
-
-    return dateFrom < new Date() && dateTo > new Date();
+    console.log(reservation.paymentStatus);
+    return dateFrom < new Date() && dateTo > new Date()  && reservation.paymentStatus === PaymentStatus.PAID; 
   }
 }
