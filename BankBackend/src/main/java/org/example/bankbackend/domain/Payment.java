@@ -24,12 +24,14 @@ public class Payment {
     private Merchant merchant;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    //@JoinColumn(name = "customer_id")
     private Customer customer;
 
     private Double amount;
     private String currency;
-    private String stan;
+
+    @Column(unique = true)
+    private String stan; // samo za karticu
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
@@ -46,6 +48,7 @@ public class Payment {
     private String globalTransactionId;
 
     private LocalDateTime acquirerTimestamp;
+    private String pspTimestamp;
 
     public Long getId() {
         return id;
@@ -83,16 +86,20 @@ public class Payment {
         return expiresAt;
     }
 
-    public Integer getAttemptCount() {
-        return attemptCount;
-    }
-
     public String getGlobalTransactionId() {
         return globalTransactionId;
     }
 
+    public Integer getAttemptCount() {
+        return attemptCount;
+    }
+
     public LocalDateTime getAcquirerTimestamp() {
         return acquirerTimestamp;
+    }
+
+    public String getPspTimestamp() {
+        return pspTimestamp;
     }
 
     public void setId(Long id) {
@@ -141,5 +148,9 @@ public class Payment {
 
     public void setAcquirerTimestamp(LocalDateTime acquirerTimestamp) {
         this.acquirerTimestamp = acquirerTimestamp;
+    }
+
+    public void setPspTimestamp(String pspTimestamp) {
+        this.pspTimestamp = pspTimestamp;
     }
 }

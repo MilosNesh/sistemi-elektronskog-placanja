@@ -1,0 +1,14 @@
+<div *ngIf="qrValue; else loading">
+  <qrcode
+    [qrdata]="qrValue"
+    [width]="300"
+    [errorCorrectionLevel]="'M'">
+  </qrcode>
+
+  <p>Skenirajte QR kod iz mobilne bankarske aplikacije</p>
+</div>
+
+<ng-template #loading>
+  <p>Učitavanje QR koda...</p>
+</ng-template>
+
