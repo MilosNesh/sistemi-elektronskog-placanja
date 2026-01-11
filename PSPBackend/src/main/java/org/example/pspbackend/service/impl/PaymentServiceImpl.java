@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
             return null;
         }
 
-        Date pspTimestamp = Date.from(Instant.now());
+        LocalDateTime pspTimestamp = LocalDateTime.now();
 
         Transaction transaction = new Transaction(
                 merchant,
@@ -73,22 +74,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){
-        System.out.println("Prvi:  " + paymentResponse.getPspTimestamp());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date pspTimestamp;
-        try {
-            pspTimestamp = sdf.parse(paymentResponse.getPspTimestamp());
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Nevalidan format pspTimestamp-a: " + paymentResponse.getPspTimestamp(), e);
-        }
 
-        Date acauirerTimestamp;
-        try {
-            acauirerTimestamp = sdf.parse(paymentResponse.getPspTimestamp());
-        } catch (ParseException e) {
-            throw new IllegalArgumentException("Nevalidan format acquirerTimestamp-a: " + paymentResponse.getPspTimestamp(), e);
-        }
+        System.out.println("Prvi:  " + paymentResponse.getPspTimestamp());
+        LocalDateTime pspTimestamp = LocalDateTime.parse(paymentResponse.getPspTimestamp());
+
+        Transaction transaction1 = transactionService.getByStan(paymentResponse.getStan());
+        System.out.println("Iz baze: " + transaction1.getStan() + " | " + transaction1.getMerchant().getMerchantId() + " | " + transaction1.getPspTimestamp());
         Transaction transaction = transactionService.get(paymentResponse.getStan(), paymentResponse.getMerchantId(), pspTimestamp);
+        System.out.println("Iz responsa: " + paymentResponse.getStan() + " | " + paymentResponse.getMerchantId() + " | " + pspTimestamp);
 
         System.out.println("Drugi: " + pspTimestamp);
         if(transaction == null){
@@ -96,7 +89,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         transaction.setGlobalTransactionId(paymentResponse.getGlobalTransactionId());
-        transaction.setAcquirerTimestamp(acauirerTimestamp);
+        transaction.setAcquirerTimestamp(paymentResponse.getAcquirerTimestamp());
         transaction.setStatus(paymentResponse.getStatus());
         transactionService.save(transaction);
 

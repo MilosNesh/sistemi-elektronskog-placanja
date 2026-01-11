@@ -6,7 +6,8 @@ import org.example.pspbackend.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -19,5 +20,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     public void save(Transaction transaction) { transactionRepository.save(transaction); }
 
-    public Transaction get(String stan, Long merchantId, Date pspTimestamp) { return transactionRepository.find(stan, merchantId, pspTimestamp); }
+    public Transaction getByStan(String stan) { return transactionRepository.findByStan(stan); }
+
+    public Transaction get(String stan, Long merchantId, LocalDateTime pspTimestamp) { return transactionRepository.find(stan, merchantId, pspTimestamp); }
 }

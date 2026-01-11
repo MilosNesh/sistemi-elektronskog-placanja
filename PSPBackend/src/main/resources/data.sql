@@ -1,6 +1,6 @@
 INSERT INTO public.merchants(
     port, merchant_id, merchant_email, error_url, failed_url, merchant_password, seller_url, success_url)
-VALUES (80, 1, 'cars@gmail.com', '', '', '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm', '', '');
+VALUES (80, 1, 'cars@gmail.com', 'https://localhost:8444/payment/error', 'https://localhost:8444/payment/fail', '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm', '', 'https://localhost:8444/payment/success');
 
 
 INSERT INTO public.payment_methods(
