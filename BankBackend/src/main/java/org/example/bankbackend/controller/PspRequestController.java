@@ -28,6 +28,8 @@ public class PspRequestController {
         System.out.println("HMAC: " + signature);
         pspAuthService.validateRequest(request, signature);
         PaymentInitResponse response = paymentService.initPayment(request);
+        System.out.println("Ceo response: " + response);
+        System.out.println("URL_MOJ: " + response.getPaymentUrl());
         return ResponseEntity.ok(response);
     }
 }

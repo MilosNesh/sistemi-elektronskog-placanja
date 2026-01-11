@@ -11,15 +11,17 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "merchants")
+@Table(name = "merchant")
 public class Merchant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    @Column(unique = true)
+
+    @Column(unique = true, name="account_number")
     private String accountNumber;
+
     private Boolean active;
 
     public Long getId() {

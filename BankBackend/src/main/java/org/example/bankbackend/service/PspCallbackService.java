@@ -8,8 +8,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class PspCallbackService {
-    private final WebClient webClient = WebClient.create();
+    private final WebClient webClient;
 
+    public PspCallbackService(WebClient webClient) {
+        this.webClient = webClient;
+    }
     public void notifyPsp(Payment payment) {
 
         PaymentResponse response = new PaymentResponse(
@@ -22,7 +25,7 @@ public class PspCallbackService {
         );
 
         webClient.post()
-                .uri("http://localhost:8080/payment/status")
+                .uri("https://localhost:8445/payment/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(response)
                 .retrieve()

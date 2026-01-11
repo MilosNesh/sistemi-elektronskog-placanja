@@ -28,7 +28,7 @@ export class PaymentPageComponent implements OnInit{
   luhnCheck(value: string): boolean {
   let sum = 0;
   let shouldDouble = false;
-  
+
   // prolazimo unazad kroz sve cifre
   for (let i = value.length - 1; i >= 0; i--) {
     let digit = parseInt(value.charAt(i), 10);
@@ -62,6 +62,7 @@ export class PaymentPageComponent implements OnInit{
     this.paymentService.getPaymentForm(paymentId).subscribe
     ({
       next: res => {
+        console.log(res);
         this.payment = res;
         this.loading = false;
 
@@ -76,12 +77,13 @@ export class PaymentPageComponent implements OnInit{
     });
   }
 
-  
-  
+
+
   submit(): void{
     if (!this.payment || this.form.invalid) {
       return;
     }
+    console.log(this.payment);
 
     this.paymentService.pay(this.payment.paymentId, this.form.value as any)
       .subscribe({

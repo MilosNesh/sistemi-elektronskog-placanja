@@ -16,7 +16,10 @@ public class PaymentInitResponse {
 
     public PaymentInitResponse(){}
 
-    public PaymentInitResponse(Long paymentId, String paymentUrl) {}
+    public PaymentInitResponse(Long paymentId, String paymentUrl) {
+        this.paymentId = paymentId;
+        this.paymentUrl = paymentUrl;
+    }
 
     public Long getPaymentId() {
         return paymentId;

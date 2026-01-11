@@ -61,6 +61,10 @@ public class CardPaymentProvider implements PaymentProviderService {
         transaction.setStan(stan);
         transactionService.save(transaction);
 
+
+        System.out.println("payment id: " + paymentInitResponse.getPaymentId() );
+        System.out.println("payment url: " + paymentInitResponse.getPaymentUrl() );
+
         return paymentInitResponse.getPaymentUrl();
     }
 }

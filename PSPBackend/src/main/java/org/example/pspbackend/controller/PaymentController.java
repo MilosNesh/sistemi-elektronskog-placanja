@@ -36,6 +36,7 @@ public class PaymentController {
     ) {
         System.out.println("RRRRR: " + request.getType() + " id: " + request.getPaymentMethodId() + " transactionId: " + transactionId);
         String redirectUrl = paymentService.executePayment(transactionId, request);
+        System.out.println("RRRRR: " + redirectUrl);
         return ResponseEntity.ok(redirectUrl);
     }
 

@@ -21,7 +21,7 @@ export class PaymentMethodService {
   }
 
   public selectPaymentMethod(paymentMethod: PaymentMethod, transactionId: string) : Observable<string>{
-    return this.http.post<string>(`${enivironment.backenUrl}/payment/${transactionId}/make`, paymentMethod);
+    return this.http.post(`${enivironment.backenUrl}/payment/${transactionId}/make`, paymentMethod,  { responseType: 'text' });
   }
 
 }
