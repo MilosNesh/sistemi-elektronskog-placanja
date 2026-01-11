@@ -24,4 +24,7 @@ export class PaymentMethodService {
     return this.http.post(`${enivironment.backenUrl}/payment/${transactionId}/make`, paymentMethod,  { responseType: 'text' });
   }
 
+  public redirect(transactionId: string) : Observable<string> {
+    return this.http.get(`${enivironment.backenUrl}/payment/redirect/${transactionId}`, {responseType: 'text'});
+  }
 }

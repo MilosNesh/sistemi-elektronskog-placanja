@@ -32,6 +32,11 @@ export class PaymentMethodsComponent {
     this.paymentMethodService.getByMerchantId(this.merchantId).subscribe({
       next: (response) => {
         this.paymentMethods = response;
+        this.paymentMethodService.redirect(this.transactionId).subscribe({
+          next: (res) => {
+            window.location.href = res;
+          }
+        })
       },
       error: (err) => {
         console.log("Greska pri ucitavanju metoda placanja za merchant id: ", 1);

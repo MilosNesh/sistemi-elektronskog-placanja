@@ -14,5 +14,5 @@ export const routes: Routes = [
     { path: "vehicle/:id", component: VehicleComponent },
     { path: "navbar", component: NavbarComponent },
     { path: "reservations", component: ReservationsComponent },
-    { path: "payment/:status/:id", component: PaymentComponent}
+    { path: "payment/:id", component: PaymentComponent}
 ]; 

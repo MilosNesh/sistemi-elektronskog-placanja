@@ -1,10 +1,14 @@
 package org.example.pspbackend.controller;
 
+import org.example.pspbackend.domain.Merchant;
+import org.example.pspbackend.domain.Transaction;
 import org.example.pspbackend.dto.MerchantRequest;
 import org.example.pspbackend.dto.PaymentMethodDTO;
 import org.example.pspbackend.dto.PaymentResponse;
+import org.example.pspbackend.service.MerchantService;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.PaymentService;
+import org.example.pspbackend.service.TransactionService;
 import org.example.pspbackend.service.impl.DynamicPaymentProviderRegistryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,7 +24,10 @@ public class PaymentController {
     private PaymentService paymentService;
     @Autowired
     private DynamicPaymentProviderRegistryImpl registry;
-
+    @Autowired
+    private TransactionService transactionService;
+    @Autowired
+    private MerchantService merchantService;
 
     @PostMapping("/merchant-request")
     public ResponseEntity<String> createPaymentUrl(@RequestBody MerchantRequest request)
@@ -58,4 +65,12 @@ public class PaymentController {
         return ResponseEntity.ok( "" + className + " added!");
     }
 
+    @GetMapping("/redirect/{transactionId}")
+    public ResponseEntity<String> redirect(@PathVariable String transactionId) {
+        Transaction transaction = transactionService.getById(transactionId);
+        if (transaction != null && transaction.getGlobalTransactionId() != null) {
+            return ResponseEntity.ok(transaction.getMerchant().getSellerUrl()+transaction.getMerchantOrderId());
+        }
+        return ResponseEntity.notFound().build();
+    }
 }

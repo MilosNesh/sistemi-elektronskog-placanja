@@ -14,6 +14,7 @@
                 <h3 *ngFor="let service of reservation.additionalServiceDTOs">- {{service.name}}</h3>
                 <h3>Dates: {{formatDate(reservation.dateFrom)}} : {{formatDate(reservation.dateTo)}}</h3>
                 <h3>Total price: {{reservation.totalPrice}} {{reservation.currency}}</h3>
+                <h3>Payment status: {{reservation.paymentStatus}}</h3>
                 <div *ngIf="isActive(reservation)" class="status">
                     <h4>Active</h4>
                 </div>
