@@ -6,6 +6,7 @@
   </qrcode>
 
   <p>Skenirajte QR kod iz mobilne bankarske aplikacije</p>
+  <button *ngIf="qrValue !== null" (click)="qrPay(qrValue)">Pay</button>
 </div>
 
 <ng-template #loading>

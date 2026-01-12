@@ -30,7 +30,7 @@ public class PaymentService {
         this.pspCallbackService = pspCallbackService;
     }
 
-    public PaymentInitResponse initPayment(PaymentInitRequest request){
+    public PaymentInitResponse initPayment(PaymentInitRequest request, String type){
         Merchant merchant = merchantRepository.findById(request.getMerchantId())
                 .orElseThrow(() -> new IllegalArgumentException("Merchant not found"));
 
@@ -55,9 +55,13 @@ public class PaymentService {
         payment.setExpiresAt(now.plusMinutes(10));
         payment.setPspTimestamp(request.getPspTimestamp());
 
+        if(type.equals("/qr")) {
+            payment.setCustomer(customerRepository.getById(1l));
+        }
+
         payment = paymentRepository.save(payment);
 
-        return new PaymentInitResponse(payment.getId(), "https://localhost:4100/pay/" + payment.getId());
+        return new PaymentInitResponse(payment.getId(), "https://localhost:4100/pay/" + payment.getId() + type);
     }
 
     public PaymentFormResponse getPaymentForm(Long paymentId){
@@ -165,6 +169,9 @@ public class PaymentService {
             throw new IllegalStateException("Payment expired");
         }
 
+        if (payment.getAttemptCount() > 0) {
+            throw new IllegalStateException("Payment already attempted");
+        }
         // validacija amount i currency
         if (!payment.getCurrency().equals(qr.currency()) || payment.getAmount() != qr.amount()) {
             throw new IllegalArgumentException("QR payment data mismatch");
@@ -176,6 +183,19 @@ public class PaymentService {
             throw new IllegalArgumentException("QR merchant account mismatch");
         }
 
+        Customer customer = payment.getCustomer();
+
+        if(customer.getBalance() < payment.getAmount()){
+            payment.setStatus(PaymentStatus.FAILED);
+            payment.setAttemptCount(1);
+            paymentRepository.save(payment);
+
+            pspCallbackService.notifyPsp(payment);
+            throw new IllegalStateException("Insufficient funds");
+        }
+
+        customer.setBalance(customer.getBalance() - payment.getAmount());
+        payment.setCustomer(customer);
 
         payment.setStatus(PaymentStatus.COMPLETED);
         payment.setGlobalTransactionId(UUID.randomUUID().toString());
@@ -183,7 +203,7 @@ public class PaymentService {
         payment.setAttemptCount(1);
 
         paymentRepository.save(payment);
-
+        customerRepository.save(customer);
         pspCallbackService.notifyPsp(payment);
 
         return new PaymentResponse(

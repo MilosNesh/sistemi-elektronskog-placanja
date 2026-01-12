@@ -15,7 +15,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/payments/**").permitAll()
-                        .requestMatchers("/init").permitAll()
+                        .requestMatchers("/init", "/init/qr").permitAll()
                         .anyRequest().authenticated()
                 );
 

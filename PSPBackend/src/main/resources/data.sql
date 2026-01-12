@@ -14,4 +14,4 @@ INSERT INTO public.merchant_payment_method(
     merchant_id, payment_method_id, is_enabled)
 VALUES
     (1, 1, true),  -- CREDIT_CARD
-    (1, 2, false); -- QR_CODE
+    (1, 2, true); -- QR_CODE

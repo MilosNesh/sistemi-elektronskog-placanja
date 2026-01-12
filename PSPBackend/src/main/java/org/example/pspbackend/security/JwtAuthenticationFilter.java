@@ -25,7 +25,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.tokenUtil = tokenUtil;
         this.merchantService = merchantService;
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
 
+        return path.equals("/payment/status") ||
+        path.matches("/payment/.*/make") ||
+        path.matches("/payment-method/merchant/.*")
+                || path.startsWith("/payment/redirect/");
+    }
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,

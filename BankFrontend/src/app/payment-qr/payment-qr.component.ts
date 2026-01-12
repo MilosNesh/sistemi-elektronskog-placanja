@@ -32,4 +32,20 @@ export class PaymentQrComponent implements OnInit {
     });
   }
 
+  qrPay(result: string){
+
+    this.http.post(
+      `https://localhost:8443/payments/${this.paymentId}/qr-pay`,
+      { qrPayload: result }
+    ).subscribe({
+      next: (res) => {
+        alert("Payment success");
+      },
+      error: (err) => {
+        alert("Payment error");
+        // this.errorMessage = err.error?.message || 'Payment failed';
+      }
+  });
+}
+
 }

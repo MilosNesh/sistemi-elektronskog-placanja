@@ -61,8 +61,9 @@ export class PaymentPageComponent implements OnInit{
     const paymentId = Number(this.route.snapshot.paramMap.get('paymentId'));
     this.paymentService.getPaymentForm(paymentId).subscribe
     ({
-      next: res => {
+      next: (res: PaymentFormResponse) => {
         console.log(res);
+        console.log(res.amount)
         this.payment = res;
         this.loading = false;
 
