@@ -1,0 +1,101 @@
+/* Container */
+form {
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  font-family: Arial, sans-serif;
+}
+
+/* Title */
+h2 {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+/* Amount text */
+p {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 24px;
+  color: #374151;
+}
+
+/* Labels */
+label {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Inputs */
+input {
+  margin-top: 6px;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Input focus */
+input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Error message */
+.error {
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 12px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Submit button */
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+/* Button hover */
+button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+/* Button active */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Disabled button */
+button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Loading text */
+div[ng-reflect-ng-if="loading"] {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 40px;
+}

@@ -68,7 +68,7 @@ public class PaymentController {
     @GetMapping("/redirect/{transactionId}")
     public ResponseEntity<String> redirect(@PathVariable String transactionId) {
         Transaction transaction = transactionService.getById(transactionId);
-        if (transaction != null && transaction.getGlobalTransactionId() != null) {
+        if (transaction != null && transaction.getStatus() != null) {
             return ResponseEntity.ok(transaction.getMerchant().getSellerUrl()+transaction.getMerchantOrderId());
         }
         return ResponseEntity.notFound().build();
