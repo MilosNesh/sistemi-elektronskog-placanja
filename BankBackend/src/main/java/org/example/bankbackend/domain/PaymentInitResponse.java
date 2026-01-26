@@ -8,8 +8,8 @@ import org.example.bankbackend.domain.enums.PaymentStatus;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class PaymentInitResponse {
     private Long paymentId;
     private String paymentUrl;

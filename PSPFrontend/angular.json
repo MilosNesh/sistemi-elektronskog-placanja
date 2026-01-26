@@ -67,6 +67,7 @@
           },
           "defaultConfiguration": "development",
           "options": {
+            "port": 4200,
             "ssl": true,
               "sslCert": "certs/psp_fe.crt",
               "sslKey": "certs/psp_fe.key"
@@ -97,5 +98,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "bc3dddd4-363c-42a2-b76f-37ce876a786c"
   }
 }

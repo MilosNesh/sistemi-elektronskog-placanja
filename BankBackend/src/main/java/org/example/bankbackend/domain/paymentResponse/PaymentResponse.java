@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@AllArgsConstructor
+//@AllArgsConstructor
 public class PaymentResponse {
     private PaymentStatus status;
     private String globalTransactionId;
