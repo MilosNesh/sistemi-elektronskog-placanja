@@ -15,6 +15,7 @@ import org.example.pspbackend.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -75,6 +76,12 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentProviderService provider = registry.getProvider(request.getType());
 
         return provider.processPayment(transactionId, request);
+    }
+
+    public BigDecimal convertFiatToBtc(BigDecimal fiatAmount) {
+        // primer: fiksni kurs 1 BTC = 50_000 USD
+        BigDecimal btcPrice = new BigDecimal("50000"); // u fiat valuti
+        return fiatAmount.divide(btcPrice, 8, BigDecimal.ROUND_HALF_UP); // 8 decimala
     }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){

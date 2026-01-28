@@ -27,4 +27,12 @@ export class PaymentMethodService {
   public redirect(transactionId: string) : Observable<string> {
     return this.http.get(`${enivironment.backenUrl}/payment/redirect/${transactionId}`, {responseType: 'text'});
   }
+
+  public createCryptoPayment(transactionId: string, amount: number): Observable<{btcAddress: string, btcAmount: string}>{
+    return this.http.post<{btcAddress: string, btcAmount: string}>(
+      `${enivironment.backenUrl}/payment/payments/${transactionId}/crypto`,
+      { amount: amount },
+      { headers: this.authService.getHeaderToken() }
+    );
+  }
 }

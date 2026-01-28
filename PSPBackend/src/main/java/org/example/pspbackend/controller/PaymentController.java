@@ -1,10 +1,12 @@
 package org.example.pspbackend.controller;
 
+import org.example.pspbackend.domain.CryptoPayment;
 import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
 import org.example.pspbackend.dto.MerchantRequest;
 import org.example.pspbackend.dto.PaymentMethodDTO;
 import org.example.pspbackend.dto.PaymentResponse;
+import org.example.pspbackend.repository.CryptoPaymentRepository;
 import org.example.pspbackend.service.MerchantService;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.PaymentService;
@@ -15,6 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,6 +33,8 @@ public class PaymentController {
     private TransactionService transactionService;
     @Autowired
     private MerchantService merchantService;
+    @Autowired
+    private CryptoPaymentRepository cryptoPaymentRepository;
 
     @PostMapping("/merchant-request")
     public ResponseEntity<String> createPaymentUrl(@RequestBody MerchantRequest request)
@@ -72,5 +79,28 @@ public class PaymentController {
             return ResponseEntity.ok(transaction.getMerchant().getSellerUrl()+transaction.getMerchantOrderId());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/payments/{paymentId}/crypto")
+    public ResponseEntity<Map<String, String>> createCryptoPayment(@PathVariable String paymentId,
+                                                                   @RequestBody Map<String, Object> body) {
+        BigDecimal fiatAmount = new BigDecimal(body.get("amount").toString());
+        BigDecimal btcAmount = paymentService.convertFiatToBtc(fiatAmount); // koristi API za kurs
+
+        CryptoPayment payment = new CryptoPayment();
+        payment.setPaymentId(paymentId);
+        payment.setFiatAmount(fiatAmount);
+        payment.setBtcAmount(btcAmount);
+        payment.setBtcAddress("tb1q48vuqq27jakzh20g5459k4mc24zvhkhfh899dv"); // testnet adresa
+        payment.setStatus("PENDING");
+        payment.setCreatedAt(LocalDateTime.now());
+
+        cryptoPaymentRepository.save(payment);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("btcAddress", payment.getBtcAddress());
+        response.put("btcAmount", btcAmount.toPlainString());
+
+        return ResponseEntity.ok(response);
     }
 }

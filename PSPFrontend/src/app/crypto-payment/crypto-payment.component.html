@@ -1,0 +1,41 @@
+<div class="crypto-container">
+
+  <h1>Bitcoin payment</h1>
+
+  <div *ngIf="loading">
+    Loading crypto payment...
+  </div>
+
+  <div *ngIf="error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error">
+
+    <p>
+      Scan the QR code below using a <strong>Bitcoin testnet wallet</strong>
+    </p>
+
+    <div class="qr-wrapper">
+      <qrcode
+        [qrdata]="btcQrData"
+        [width]="260"
+        [errorCorrectionLevel]="'M'">
+      </qrcode>
+    </div>
+
+    <div class="details">
+      <p><strong>Address:</strong></p>
+      <code>{{ btcAddress }}</code>
+
+      <p><strong>Amount:</strong> {{ btcAmount }} BTC</p>
+    </div>
+
+    <p class="note">
+      Payment will be processed once the transaction is detected on the testnet.
+    </p>
+
+  </div>
+
+</div>
+
