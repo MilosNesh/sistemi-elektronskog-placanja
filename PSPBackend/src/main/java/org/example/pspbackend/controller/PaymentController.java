@@ -104,7 +104,8 @@ public class PaymentController {
                                                                    @RequestBody CryptoPaymentRequest request) {
         BigDecimal rsdAmount = request.getAmount();
 
-        BigDecimal btcAmount = paymentService.convertRsdToBtc(rsdAmount); // koristi API za kurs
+        BigDecimal btcAmount = paymentService.convertRsdToBtc(rsdAmount); // racuna kurs po fiksnom odnosu
+        // BigDecimal btcAmount = paymentService.advancedConvertRsdToBtc(rsdAmount); // racuna kurs u realnom vremenu (koristi API)
 
         CryptoPayment payment = new CryptoPayment();
         payment.setPaymentId(paymentId);

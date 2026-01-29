@@ -11,4 +11,5 @@ public interface PaymentService {
     public String executePayment(String transactionId, PaymentMethodDTO request);
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse);
     public BigDecimal convertRsdToBtc(BigDecimal fiatAmount);
+    public BigDecimal advancedConvertRsdToBtc(BigDecimal fiatAmount);
 }
