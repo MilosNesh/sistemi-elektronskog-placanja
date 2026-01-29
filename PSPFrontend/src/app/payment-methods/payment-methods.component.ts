@@ -4,13 +4,11 @@ import { CommonModule } from '@angular/common';
 import { PaymentMethodService } from '../services/payment-method.service';
 import { PaymentMethod } from '../models/payment-method.model';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import {QRCodeComponent} from 'angularx-qrcode';
 
 @Component({
   selector: 'app-payment-methods',
   imports: [
     CommonModule,
-    QRCodeComponent,
     RouterModule
   ],
   templateUrl: './payment-methods.component.html',

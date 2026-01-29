@@ -14,6 +14,9 @@ import { PaymentMethodService } from '../services/payment-method.service';
 export class CryptoPaymentComponent implements OnInit {
   transactionId!: string;
 
+  amount!: number;
+  currency!: string; // RSD
+
   btcAddress!: string;
   btcAmount!: string;
 
@@ -25,20 +28,34 @@ export class CryptoPaymentComponent implements OnInit {
   ngOnInit(): void {
     this.transactionId = this.route.snapshot.paramMap.get('transactionId')!;
 
-    // za sada hardkod amount
-    this.paymentMethodService
-    .createCryptoPayment(this.transactionId, 1) // 1 RSD
-    .subscribe({
-      next: (data) =>{
-        this.btcAddress = data.btcAddress;
-        this.btcAmount = data.btcAmount;
-        this.loading = false;
+    this.paymentMethodService.getTransaction(this.transactionId).subscribe({
+      next: (tx) => {
+        this.amount = tx.amount;
+        this.currency = tx.currency;
+
+        this.createCryptoPayment();
       },
-      error: () =>{
-        this.error = "Greska pri kreiranju crypto placanja";
+      error: () => {
+        this.error = 'Greška pri učitavanju transakcije';
         this.loading = false;
       }
     });
+  }
+
+  private createCryptoPayment(): void {
+    this.paymentMethodService
+      .createCryptoPayment(this.transactionId, this.amount)
+      .subscribe({
+        next: (data) => {
+          this.btcAddress = data.btcAddress;
+          this.btcAmount = data.btcAmount;
+          this.loading = false;
+        },
+        error: () => {
+          this.error = 'Greška pri kreiranju crypto plaćanja';
+          this.loading = false;
+        }
+      });
   }
 
   get btcQrData(): string {

@@ -3,9 +3,7 @@ package org.example.pspbackend.controller;
 import org.example.pspbackend.domain.CryptoPayment;
 import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
-import org.example.pspbackend.dto.MerchantRequest;
-import org.example.pspbackend.dto.PaymentMethodDTO;
-import org.example.pspbackend.dto.PaymentResponse;
+import org.example.pspbackend.dto.*;
 import org.example.pspbackend.repository.CryptoPaymentRepository;
 import org.example.pspbackend.service.MerchantService;
 import org.example.pspbackend.service.PaymentProviderService;
@@ -81,15 +79,36 @@ public class PaymentController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/transaction/{transactionId}")
+    public ResponseEntity<TransactionDTO> getTransaction(@PathVariable String transactionId){
+        Transaction transaction = transactionService.getById(transactionId);
+        if(transaction == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        TransactionDTO dto = new TransactionDTO(
+                transaction.getId(),
+                transaction.getMerchant().getMerchantId(),
+                transaction.getAmount(),
+                transaction.getCurrency(),
+                transaction.getMerchantTimestamp(),
+                transaction.getMerchantOrderId(),
+                transaction.getPspTimestamp()
+        );
+
+        return ResponseEntity.ok(dto);
+    }
+
     @PostMapping("/payments/{paymentId}/crypto")
     public ResponseEntity<Map<String, String>> createCryptoPayment(@PathVariable String paymentId,
-                                                                   @RequestBody Map<String, Object> body) {
-        BigDecimal fiatAmount = new BigDecimal(body.get("amount").toString());
-        BigDecimal btcAmount = paymentService.convertFiatToBtc(fiatAmount); // koristi API za kurs
+                                                                   @RequestBody CryptoPaymentRequest request) {
+        BigDecimal rsdAmount = request.getAmount();
+
+        BigDecimal btcAmount = paymentService.convertRsdToBtc(rsdAmount); // koristi API za kurs
 
         CryptoPayment payment = new CryptoPayment();
         payment.setPaymentId(paymentId);
-        payment.setFiatAmount(fiatAmount);
+        payment.setFiatAmount(rsdAmount);
         payment.setBtcAmount(btcAmount);
         payment.setBtcAddress("tb1q48vuqq27jakzh20g5459k4mc24zvhkhfh899dv"); // testnet adresa
         payment.setStatus("PENDING");

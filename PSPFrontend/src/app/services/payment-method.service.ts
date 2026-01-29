@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { Observable } from "rxjs";
 import { PaymentMethod } from "../models/payment-method.model";
 import { enivironment } from "../../environments/environment";
+import { Transaction } from "../models/transaction.model";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,12 @@ export class PaymentMethodService {
 
   public redirect(transactionId: string) : Observable<string> {
     return this.http.get(`${enivironment.backenUrl}/payment/redirect/${transactionId}`, {responseType: 'text'});
+  }
+
+  public getTransaction(transactionId: string) {
+    return this.http.get<Transaction>(
+      `${enivironment.backenUrl}/payment/transaction/${transactionId}`
+    );
   }
 
   public createCryptoPayment(transactionId: string, amount: number): Observable<{btcAddress: string, btcAmount: string}>{

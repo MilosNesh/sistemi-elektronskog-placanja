@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -78,10 +79,10 @@ public class PaymentServiceImpl implements PaymentService {
         return provider.processPayment(transactionId, request);
     }
 
-    public BigDecimal convertFiatToBtc(BigDecimal fiatAmount) {
-        // primer: fiksni kurs 1 BTC = 50_000 USD
-        BigDecimal btcPrice = new BigDecimal("50000"); // u fiat valuti
-        return fiatAmount.divide(btcPrice, 8, BigDecimal.ROUND_HALF_UP); // 8 decimala
+    public BigDecimal convertRsdToBtc(BigDecimal fiatAmount) {
+
+        BigDecimal btcPrice = new BigDecimal("8622000"); // u fiat valuti
+        return fiatAmount.divide(btcPrice, 8, RoundingMode.HALF_UP);
     }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){

@@ -17,8 +17,8 @@ public class TransactionDTO {
     private Long merchantId;
     private double amount;
     private String currency;
-    private Date merchantTimestamp;
+    private LocalDateTime merchantTimestamp;
     private String merchantOrderId;
-    private Date pspTimestamp;
+    private LocalDateTime pspTimestamp;
 
 }

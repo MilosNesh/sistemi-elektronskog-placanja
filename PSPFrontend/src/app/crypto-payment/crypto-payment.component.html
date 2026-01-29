@@ -13,6 +13,11 @@
   <div *ngIf="!loading && !error">
 
     <p>
+      You are paying:
+      <strong>{{ amount }} {{ currency }}</strong>
+    </p>
+
+    <p>
       Scan the QR code below using a <strong>Bitcoin testnet wallet</strong>
     </p>
 
@@ -32,7 +37,7 @@
     </div>
 
     <p class="note">
-      Payment will be processed once the transaction is detected on the testnet.
+      BTC amount is calculated in real time based on the current exchange rate.
     </p>
 
   </div>
