@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CryptoPaymentRepository extends JpaRepository<CryptoPayment, Long> {
     List<CryptoPayment> findByStatus(String status);
+    CryptoPayment findByPaymentId(String paymentId);
 }

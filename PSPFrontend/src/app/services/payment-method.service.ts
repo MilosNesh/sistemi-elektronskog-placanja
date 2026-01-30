@@ -42,4 +42,19 @@ export class PaymentMethodService {
       { headers: this.authService.getHeaderToken() }
     );
   }
+
+  public getCryptoStatus(paymentId: string): Observable<{ status: string, txHash?: string }> {
+    return this.http.get<{ status: string, txHash?: string }>(
+      `${enivironment.backenUrl}/payment/payments/${paymentId}/crypto/status`,
+      { headers: this.authService.getHeaderToken() }
+    );
+  }
+
+  public payCryptoPayment(paymentId: string): Observable<void> {
+    return this.http.post<void>(
+      `${enivironment.backenUrl}/payment/payments/${paymentId}/crypto/pay`,
+      {},
+      { headers: this.authService.getHeaderToken() }
+    );
+  }
 }

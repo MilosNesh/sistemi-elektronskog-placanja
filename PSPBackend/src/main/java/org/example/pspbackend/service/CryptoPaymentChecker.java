@@ -21,6 +21,7 @@ public class CryptoPaymentChecker {
 
     @Scheduled(fixedDelay = 10000) //svakih 10 sekundi
     public void checkPendingPayments(){
+        System.out.println("Checking pending payments...");
         List<CryptoPayment> pending = paymentRepository.findByStatus("PENDING");
 
         for(CryptoPayment payment : pending){

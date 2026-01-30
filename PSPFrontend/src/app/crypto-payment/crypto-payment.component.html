@@ -34,11 +34,24 @@
       <code>{{ btcAddress }}</code>
 
       <p><strong>Amount:</strong> {{ btcAmount }} BTC</p>
+      <button
+      *ngIf="status === 'PENDING'"
+      (click)="payDemo()">
+      Pay
+    </button>
     </div>
 
     <p class="note">
       BTC amount is calculated in real time based on the current exchange rate.
     </p>
+
+    <p *ngIf="status === 'PENDING'">
+    ⏳ Waiting for blockchain confirmation...
+  </p>
+
+  <p *ngIf="status === 'SUCCESS'">
+    ✅ Payment successful
+  </p>
 
   </div>
 

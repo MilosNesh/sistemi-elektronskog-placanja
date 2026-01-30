@@ -123,4 +123,38 @@ public class PaymentController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/payments/{paymentId}/crypto/status")
+    public ResponseEntity<CryptoPaymentStatusDTO> getCryptoStatus(
+            @PathVariable String paymentId) {
+
+        CryptoPayment payment = cryptoPaymentRepository.findByPaymentId(paymentId);
+
+        if (payment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(new CryptoPaymentStatusDTO(
+                payment.getStatus(),
+                payment.getTxHash()
+        ));
+    }
+
+    @PostMapping("/payments/{paymentId}/crypto/pay")
+    public ResponseEntity<Void> payCryptoPayment(@PathVariable String paymentId) {
+
+        CryptoPayment payment = cryptoPaymentRepository.findByPaymentId(paymentId);
+
+        if (payment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        payment.setStatus("SUCCESS");
+        payment.setTxHash("demo-tx-hash-" + System.currentTimeMillis());
+
+        cryptoPaymentRepository.save(payment);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
