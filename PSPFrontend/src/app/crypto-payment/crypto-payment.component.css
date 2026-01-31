@@ -1,0 +1,20 @@
+.crypto-container {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.qr-wrapper {
+  margin: 20px 0;
+}
+
+.details {
+  margin-top: 20px;
+  word-break: break-all;
+}
+
+.note {
+  margin-top: 30px;
+  font-size: 0.9rem;
+  color: gray;
+}

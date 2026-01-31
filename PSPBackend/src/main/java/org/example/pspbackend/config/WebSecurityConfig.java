@@ -32,7 +32,11 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 "/payment/status",
                                 "/payment/*/make",
                                 "/payment-method/merchant/**",
-                                "/payment/redirect/**").permitAll()
+                                "/payment/payments/*/crypto",
+                                "/payment/payments/*/crypto/status",
+                                "/payment/payments/*/crypto/pay",
+                                "/payment/redirect/**",
+                                "/payment/transaction/*").permitAll()
 
                         .anyRequest().authenticated()
                 )

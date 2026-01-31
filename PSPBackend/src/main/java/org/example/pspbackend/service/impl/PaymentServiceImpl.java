@@ -8,13 +8,12 @@ import org.example.pspbackend.dto.PaymentMethodDTO;
 import org.example.pspbackend.repository.MerchantRepository;
 import org.example.pspbackend.dto.PaymentResponse;
 import org.example.pspbackend.repository.TransactionRepository;
-import org.example.pspbackend.service.CallMerchantApiService;
-import org.example.pspbackend.service.PaymentProviderService;
-import org.example.pspbackend.service.PaymentService;
-import org.example.pspbackend.service.TransactionService;
+import org.example.pspbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -24,6 +23,8 @@ import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    @Autowired
+    private CryptoRateService cryptoRateService;
     @Autowired
     private TransactionRepository transactionRepository;
     @Autowired
@@ -75,6 +76,16 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentProviderService provider = registry.getProvider(request.getType());
 
         return provider.processPayment(transactionId, request);
+    }
+
+    public BigDecimal convertRsdToBtc(BigDecimal fiatAmount) {
+
+        BigDecimal btcPrice = new BigDecimal("8622000"); // u fiat valuti
+        return fiatAmount.divide(btcPrice, 8, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal advancedConvertRsdToBtc(BigDecimal fiatAmount) {
+        return cryptoRateService.convertRsdToBtc(fiatAmount);
     }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){

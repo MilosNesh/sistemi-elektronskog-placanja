@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { Observable } from "rxjs";
 import { PaymentMethod } from "../models/payment-method.model";
 import { enivironment } from "../../environments/environment";
+import { Transaction } from "../models/transaction.model";
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,34 @@ export class PaymentMethodService {
 
   public redirect(transactionId: string) : Observable<string> {
     return this.http.get(`${enivironment.backenUrl}/payment/redirect/${transactionId}`, {responseType: 'text'});
+  }
+
+  public getTransaction(transactionId: string) {
+    return this.http.get<Transaction>(
+      `${enivironment.backenUrl}/payment/transaction/${transactionId}`
+    );
+  }
+
+  public createCryptoPayment(transactionId: string, amount: number): Observable<{btcAddress: string, btcAmount: string}>{
+    return this.http.post<{btcAddress: string, btcAmount: string}>(
+      `${enivironment.backenUrl}/payment/payments/${transactionId}/crypto`,
+      { amount: amount },
+      { headers: this.authService.getHeaderToken() }
+    );
+  }
+
+  public getCryptoStatus(paymentId: string): Observable<{ status: string, txHash?: string }> {
+    return this.http.get<{ status: string, txHash?: string }>(
+      `${enivironment.backenUrl}/payment/payments/${paymentId}/crypto/status`,
+      { headers: this.authService.getHeaderToken() }
+    );
+  }
+
+  public payCryptoPayment(paymentId: string): Observable<void> {
+    return this.http.post<void>(
+      `${enivironment.backenUrl}/payment/payments/${paymentId}/crypto/pay`,
+      {},
+      { headers: this.authService.getHeaderToken() }
+    );
   }
 }

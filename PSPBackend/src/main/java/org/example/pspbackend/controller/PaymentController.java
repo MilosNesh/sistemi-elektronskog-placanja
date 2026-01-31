@@ -1,10 +1,10 @@
 package org.example.pspbackend.controller;
 
+import org.example.pspbackend.domain.CryptoPayment;
 import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
-import org.example.pspbackend.dto.MerchantRequest;
-import org.example.pspbackend.dto.PaymentMethodDTO;
-import org.example.pspbackend.dto.PaymentResponse;
+import org.example.pspbackend.dto.*;
+import org.example.pspbackend.repository.CryptoPaymentRepository;
 import org.example.pspbackend.service.MerchantService;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.PaymentService;
@@ -15,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -28,6 +31,8 @@ public class PaymentController {
     private TransactionService transactionService;
     @Autowired
     private MerchantService merchantService;
+    @Autowired
+    private CryptoPaymentRepository cryptoPaymentRepository;
 
     @PostMapping("/merchant-request")
     public ResponseEntity<String> createPaymentUrl(@RequestBody MerchantRequest request)
@@ -73,4 +78,83 @@ public class PaymentController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/transaction/{transactionId}")
+    public ResponseEntity<TransactionDTO> getTransaction(@PathVariable String transactionId){
+        Transaction transaction = transactionService.getById(transactionId);
+        if(transaction == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        TransactionDTO dto = new TransactionDTO(
+                transaction.getId(),
+                transaction.getMerchant().getMerchantId(),
+                transaction.getAmount(),
+                transaction.getCurrency(),
+                transaction.getMerchantTimestamp(),
+                transaction.getMerchantOrderId(),
+                transaction.getPspTimestamp()
+        );
+
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/payments/{paymentId}/crypto")
+    public ResponseEntity<Map<String, String>> createCryptoPayment(@PathVariable String paymentId,
+                                                                   @RequestBody CryptoPaymentRequest request) {
+        BigDecimal rsdAmount = request.getAmount();
+
+        BigDecimal btcAmount = paymentService.convertRsdToBtc(rsdAmount); // racuna kurs po fiksnom odnosu
+        // BigDecimal btcAmount = paymentService.advancedConvertRsdToBtc(rsdAmount); // racuna kurs u realnom vremenu (koristi API)
+
+        CryptoPayment payment = new CryptoPayment();
+        payment.setPaymentId(paymentId);
+        payment.setFiatAmount(rsdAmount);
+        payment.setBtcAmount(btcAmount);
+        payment.setBtcAddress("tb1q48vuqq27jakzh20g5459k4mc24zvhkhfh899dv"); // testnet adresa
+        payment.setStatus("PENDING");
+        payment.setCreatedAt(LocalDateTime.now());
+
+        cryptoPaymentRepository.save(payment);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("btcAddress", payment.getBtcAddress());
+        response.put("btcAmount", btcAmount.toPlainString());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/payments/{paymentId}/crypto/status")
+    public ResponseEntity<CryptoPaymentStatusDTO> getCryptoStatus(
+            @PathVariable String paymentId) {
+
+        CryptoPayment payment = cryptoPaymentRepository.findByPaymentId(paymentId);
+
+        if (payment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(new CryptoPaymentStatusDTO(
+                payment.getStatus(),
+                payment.getTxHash()
+        ));
+    }
+
+    @PostMapping("/payments/{paymentId}/crypto/pay")
+    public ResponseEntity<Void> payCryptoPayment(@PathVariable String paymentId) {
+
+        CryptoPayment payment = cryptoPaymentRepository.findByPaymentId(paymentId);
+
+        if (payment == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        payment.setStatus("SUCCESS");
+        payment.setTxHash("demo-tx-hash-" + System.currentTimeMillis());
+
+        cryptoPaymentRepository.save(payment);
+
+        return ResponseEntity.ok().build();
+    }
+
 }
