@@ -78,14 +78,13 @@ public class PaymentServiceImpl implements PaymentService {
         return provider.processPayment(transactionId, request);
     }
 
-    public BigDecimal convertRsdToBtc(BigDecimal fiatAmount) {
-
-        BigDecimal btcPrice = new BigDecimal("8622000"); // u fiat valuti
-        return fiatAmount.divide(btcPrice, 8, RoundingMode.HALF_UP);
+    public BigDecimal convertRsdToEth(BigDecimal rsd) {
+        BigDecimal ethRate = new BigDecimal("0.00000433"); // skontaj broj
+        return rsd.multiply(ethRate);
     }
 
-    public BigDecimal advancedConvertRsdToBtc(BigDecimal fiatAmount) {
-        return cryptoRateService.convertRsdToBtc(fiatAmount);
+    public BigDecimal advancedConvertRsdToEth(BigDecimal fiatAmount) {
+        return cryptoRateService.convertRsdToEth(fiatAmount);
     }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){

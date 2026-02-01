@@ -18,3 +18,26 @@
   </div>
 
 </div>
+
+<!-- Crypto payment modal -->
+<div *ngIf="showCryptoModal" class="crypto-modal">
+  <div class="modal-content">
+    <button class="close-btn" (click)="closeCryptoModal()">X</button>
+
+    <div *ngIf="cryptoLoading">
+      <p>Processing your crypto payment...</p>
+      <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="cryptoSuccess">
+      <p>Payment successful!</p>
+      <a [href]="'https://sepolia.etherscan.io/tx/' + cryptoTxHash" target="_blank">
+        View transaction
+      </a>
+    </div>
+
+    <div *ngIf="cryptoError">
+      <p>Error: {{ cryptoError }}</p>
+    </div>
+  </div>
+</div>
