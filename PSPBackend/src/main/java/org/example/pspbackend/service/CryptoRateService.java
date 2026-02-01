@@ -17,9 +17,9 @@ public class CryptoRateService {
     @Value("${currencyfreaks.api.key}")
     private String apiKey;
 
-    public BigDecimal convertRsdToBtc(BigDecimal rsdAmount) {
+    public BigDecimal convertRsdToEth(BigDecimal rsdAmount) {
 
-        BigDecimal btcUsdRate = getBtcUsdRate();
+        BigDecimal btcUsdRate = getEthUsdRate();
         BigDecimal usdRsdRate = getUsdRsdRate();
 
         // BTC = RSD / (BTC_USD * USD_RSD)
@@ -32,21 +32,21 @@ public class CryptoRateService {
         );
     }
 
-    private BigDecimal getBtcUsdRate() {
+    private BigDecimal getEthUsdRate() {
         String url =
                 "https://api.coingecko.com/api/v3/simple/price" +
-                        "?ids=bitcoin&vs_currencies=usd";
+                        "?ids=ethereum&vs_currencies=usd";
 
         JsonNode root = restTemplate.getForObject(url, JsonNode.class);
 
         if (root == null ||
-                !root.has("bitcoin") ||
-                !root.get("bitcoin").has("usd")) {
+                !root.has("ethereum") ||
+                !root.get("ethereum").has("usd")) {
             throw new IllegalStateException("Invalid CoinGecko response");
         }
 
         return root
-                .get("bitcoin")
+                .get("ethereum")
                 .get("usd")
                 .decimalValue(); // uvek BigDecimal
     }

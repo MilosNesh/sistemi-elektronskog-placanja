@@ -10,6 +10,6 @@ public interface PaymentService {
     public String generatePaymentUrl(MerchantRequest merchantRequest);
     public String executePayment(String transactionId, PaymentMethodDTO request);
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse);
-    public BigDecimal convertRsdToBtc(BigDecimal fiatAmount);
-    public BigDecimal advancedConvertRsdToBtc(BigDecimal fiatAmount);
+    public BigDecimal convertRsdToEth(BigDecimal rsd);
+    public BigDecimal advancedConvertRsdToEth(BigDecimal fiatAmount);
 }
