@@ -7,6 +7,7 @@ import org.example.pspbackend.repository.EthPaymentRepository;
 import org.example.pspbackend.service.*;
 import org.example.pspbackend.service.impl.DynamicPaymentProviderRegistryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.time.LocalDateTime;
 
 @RestController
@@ -137,5 +139,28 @@ public class PaymentController {
             return ResponseEntity.badRequest().body("Error sending ETH: " + e.getMessage());
         }
     }
+
+    @GetMapping("/{transactionId}/success")
+    public ResponseEntity<?> success(
+            @RequestParam("paymentId") String paymentId,
+            @RequestParam("PayerID") String payerId,
+            @RequestParam(value = "token", required = false) String token,
+            @PathVariable String transactionId
+    ) {
+        String link = paymentService.sendPaymentStatusToMerchant(transactionId, paymentId, payerId, "COMPLETED");
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(link)).build();
+    }
+
+    @GetMapping("/{transactionId}/cancel")
+    public ResponseEntity<?> cacnel(
+            @RequestParam(value = "paymentId", required = false) String paymentId,
+            @RequestParam(value = "PayerID", required = false) String payerId,
+            @RequestParam(value = "token", required = false) String token,
+            @PathVariable String transactionId
+    ) {
+        String link = paymentService.sendPaymentStatusToMerchant(transactionId, paymentId, payerId, "CANCEL");
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(link)).build();
+    }
+
 
 }
