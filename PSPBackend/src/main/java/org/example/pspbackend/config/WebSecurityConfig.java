@@ -37,7 +37,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 "/payment/eth/send",
                                 "/payment/redirect/**",
                                 "/payment/transaction/*").permitAll()
-
+                        .requestMatchers("/payment/*/cancel").permitAll()
+                        .requestMatchers("/payment/*/success").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess ->

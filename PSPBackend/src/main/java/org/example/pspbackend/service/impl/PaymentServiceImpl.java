@@ -1,5 +1,6 @@
 package org.example.pspbackend.service.impl;
 
+import com.paypal.base.rest.APIContext;
 import org.example.pspbackend.component.StanGenerator;
 import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.Transaction;
@@ -41,6 +42,8 @@ public class PaymentServiceImpl implements PaymentService {
     private StanGenerator stanGenerator;
     private final List<PaymentProviderService> providers;
 
+    @Autowired
+    private APIContext apiContext;
     public PaymentServiceImpl(List<PaymentProviderService> providers) {
         this.providers = providers;
     }
@@ -127,4 +130,26 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
+
+    @Override
+    public String sendPaymentStatusToMerchant(String transactionId, String paymentId, String payerId, String status) {
+        Transaction transaction = transactionService.getById(transactionId);
+        if(transaction == null){
+            return null;
+        }
+        transaction.setGlobalTransactionId(paymentId);
+        transaction.setStatus(status);
+        transactionService.save(transaction);
+
+        Merchant merchant = transaction.getMerchant();
+        if(merchant == null){
+            return null;
+        }
+        if(status.equals("COMPLETED"))
+            callMerchantApiService.notifyPaymentSuccess(merchant.getSuccessUrl(), transaction.getMerchantOrderId());
+        else
+            callMerchantApiService.notifyPaymentFailed(merchant.getFailedUrl(), transaction.getMerchantOrderId());
+
+        return "https://localhost:4200/payment/"+transactionId+"/"+merchant.getMerchantId()+"/";
+    }
 }

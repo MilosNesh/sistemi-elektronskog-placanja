@@ -8,7 +8,8 @@ INSERT INTO public.payment_methods(
 VALUES
     (1, 'CREDIT_CARD', '/images/credit-card.png', 'Pay with Visa, Master Card'),
     (2, 'QR_CODE', '/images/qrcode.png', 'Instant pay'),
-    (3, 'CRYPTO', '/images/crypto.png', 'Pay with Bitcoin');
+    (3, 'CRYPTO', '/images/crypto.png', 'Pay with Bitcoin'),
+    (4, 'PAYPAL', '/images/paypal.png', 'Pay with PayPal');
 
 
 INSERT INTO public.merchant_payment_method(
@@ -16,4 +17,5 @@ INSERT INTO public.merchant_payment_method(
 VALUES
     (1, 1, true),  -- CREDIT_CARD
     (1, 2, true), -- QR_CODE
-    (1,3,true); -- CRYPTO
+    (1,3,true), -- CRYPTO
+    (1,4, true);

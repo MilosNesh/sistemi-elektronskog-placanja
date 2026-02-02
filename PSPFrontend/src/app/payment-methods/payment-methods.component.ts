@@ -48,6 +48,11 @@ export class PaymentMethodsComponent implements OnInit {
   this.paymentMethodService.getByMerchantId(this.merchantId).subscribe({
     next: (response) => {
       this.paymentMethods = response;
+      this.paymentMethodService.redirect(this.transactionId).subscribe({
+        next: (res) => {
+          window.location.href = res;
+        }
+      })
     },
     error: () => {
       console.log("Greška pri učitavanju metoda plaćanja");
