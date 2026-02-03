@@ -73,17 +73,23 @@ export class PaymentMethodsComponent implements OnInit {
   onPaymentMethodSelected(paymentMethod: PaymentMethod) {
     console.log('TYPE:', paymentMethod.type);
     if(paymentMethod.type === 'CRYPTO') {
-      this.payWithCrypto();
-      return;
+      this.showCryptoModal = true;
+      this.cryptoLoading = true;
+      this.cryptoSuccess = false;
     }
+    
     console.log('Selected payment method:', paymentMethod);
 
     this.paymentMethodService.selectPaymentMethod(paymentMethod, this.transactionId).subscribe({
       next: (response) => {
         console.log('Payment method sent to backend successfully, redirect url: ', response);
         window.location.href = response;
+        this.cryptoLoading = false;
       },
-      error: (err) => console.error('Error sending payment method', err)
+      error: (err) => {
+        this.cryptoLoading = false;
+        console.error('Error sending payment method', err);
+      }
     });
 
     // this.paymentMethodService
@@ -103,13 +109,12 @@ export class PaymentMethodsComponent implements OnInit {
     this.cryptoTxHash = undefined;
     
     console.log(this.amount);
-    this.paymentMethodService.createEthPayment(this.transactionId, this.amount).subscribe({
-      next: (payment: any) => {
+    
         const request = {
-          toAddress: payment.toAddress,
-          amount: payment.ethAmount
+          toAddress: "0xEbC45d552E0947cFf740426A25fD1A3f50CaCf7e",
+          amount: this.amount
         };
-          this.paymentMethodService.sendEth(request).subscribe({
+          this.paymentMethodService.sendEth(request, this.transactionId).subscribe({
           next: (txHash: string) => {
             this.cryptoTxHash = txHash;
             this.cryptoLoading = false;
@@ -120,17 +125,16 @@ export class PaymentMethodsComponent implements OnInit {
             this.cryptoLoading = false;
           }
         });
-      },
-      error: (err) => {
-        this.cryptoError = err.error || 'Failed to create ETH payment';
-        this.cryptoLoading = false;
-      }
-    });
+      
   }
 
   closeCryptoModal() {
     this.showCryptoModal = false;
-    window.location.href = 'https://localhost:4300/home';
+    this.paymentMethodService.redirect(this.transactionId).subscribe({
+        next: (res) => {
+          window.location.href = res;
+        }
+      })
   }
 
 }

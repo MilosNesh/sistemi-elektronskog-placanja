@@ -10,7 +10,5 @@ public interface PaymentService {
     public String generatePaymentUrl(MerchantRequest merchantRequest);
     public String executePayment(String transactionId, PaymentMethodDTO request);
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse);
-    public BigDecimal convertRsdToEth(BigDecimal rsd);
-    public BigDecimal advancedConvertRsdToEth(BigDecimal fiatAmount);
     public String sendPaymentStatusToMerchant(String transactionId, String paymentId, String payerId, String status);
 }

@@ -17,7 +17,7 @@ public class CryptoRateService {
     @Value("${currencyfreaks.api.key}")
     private String apiKey;
 
-    public BigDecimal convertRsdToEth(BigDecimal rsdAmount) {
+    public BigDecimal advancedConvertRsdToEth(BigDecimal rsdAmount) {
 
         BigDecimal btcUsdRate = getEthUsdRate();
         BigDecimal usdRsdRate = getUsdRsdRate();
@@ -30,6 +30,11 @@ public class CryptoRateService {
                 8,
                 RoundingMode.HALF_UP
         );
+    }
+
+    public BigDecimal convertRsdToEth(BigDecimal rsd) {
+        BigDecimal ethRate = new BigDecimal("0.00000433");
+        return rsd.multiply(ethRate);
     }
 
     private BigDecimal getEthUsdRate() {
