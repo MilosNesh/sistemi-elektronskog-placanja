@@ -81,14 +81,14 @@ public class PaymentServiceImpl implements PaymentService {
         return provider.processPayment(transactionId, request);
     }
 
-    public BigDecimal convertRsdToEth(BigDecimal rsd) {
-        BigDecimal ethRate = new BigDecimal("0.00000433"); // skontaj broj
-        return rsd.multiply(ethRate);
-    }
-
-    public BigDecimal advancedConvertRsdToEth(BigDecimal fiatAmount) {
-        return cryptoRateService.convertRsdToEth(fiatAmount);
-    }
+//    public BigDecimal convertRsdToEth(BigDecimal rsd) {
+//        BigDecimal ethRate = new BigDecimal("0.00000433"); // skontaj broj
+//        return rsd.multiply(ethRate);
+//    }
+//
+//    public BigDecimal advancedConvertRsdToEth(BigDecimal fiatAmount) {
+//        return cryptoRateService.convertRsdToEth(fiatAmount);
+//    }
 
     public void sendPaymentStatusToMerchant(PaymentResponse paymentResponse){
 

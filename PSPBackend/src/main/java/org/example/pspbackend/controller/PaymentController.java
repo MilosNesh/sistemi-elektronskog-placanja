@@ -24,10 +24,6 @@ public class PaymentController {
     private DynamicPaymentProviderRegistryImpl registry;
     @Autowired
     private TransactionService transactionService;
-    @Autowired
-    private MerchantService merchantService;
-    @Autowired
-    private EthPaymentService ethPaymentService;
 
     @PostMapping("/merchant-request")
     public ResponseEntity<String> createPaymentUrl(@RequestBody MerchantRequest request)
@@ -94,26 +90,24 @@ public class PaymentController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/eth/balance")
-    public ResponseEntity<String> balance() throws Exception {
-        BigInteger wei = ethPaymentService.getBalance();
-        return ResponseEntity.ok(Convert.fromWei(new BigDecimal(wei), Convert.Unit.ETHER).toPlainString());
-    }
+//    @GetMapping("/eth/balance")
+//    public ResponseEntity<String> balance() throws Exception {
+//        BigInteger wei = ethPaymentService.getBalance();
+//        return ResponseEntity.ok(Convert.fromWei(new BigDecimal(wei), Convert.Unit.ETHER).toPlainString());
+//    }
 
-    @PostMapping("/eth/send/{transactionId}")
-    public ResponseEntity<String> sendEth(@PathVariable String transactionId,
-                                          @RequestBody EthPaymentRequest request) {
-        try {
-            BigDecimal rsdAmount = request.getAmount();
-            BigDecimal ethAmount = paymentService.convertRsdToEth(rsdAmount); // pretvaranje preko fiksnog odnosa
-            // BigDecimal ethAmount = paymentService.advancedConvertRsdToEth(rsdAmount); // pretvaranje preko odnosa kursa u realnom vremenu
-            String txHash = ethPaymentService.sendEth(transactionId, request.getToAddress(), ethAmount);
-
-            return ResponseEntity.ok(txHash);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error sending ETH: " + e.getMessage());
-        }
-    }
+//    @PostMapping("/eth/send/{transactionId}")
+//    public ResponseEntity<String> sendEth(@PathVariable String transactionId) {
+//        try {
+//             // pretvaranje preko fiksnog odnosa
+//
+//            String txHash = ethPaymentService.sendEth(transactionId);
+//
+//            return ResponseEntity.ok(txHash);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Error sending ETH: " + e.getMessage());
+//        }
+//    }
 
     @GetMapping("/{transactionId}/success")
     public ResponseEntity<?> success(

@@ -73,17 +73,23 @@ export class PaymentMethodsComponent implements OnInit {
   onPaymentMethodSelected(paymentMethod: PaymentMethod) {
     console.log('TYPE:', paymentMethod.type);
     if(paymentMethod.type === 'CRYPTO') {
-      this.payWithCrypto();
-      return;
+      this.showCryptoModal = true;
+      this.cryptoLoading = true;
+      this.cryptoSuccess = false;
     }
+    
     console.log('Selected payment method:', paymentMethod);
 
     this.paymentMethodService.selectPaymentMethod(paymentMethod, this.transactionId).subscribe({
       next: (response) => {
         console.log('Payment method sent to backend successfully, redirect url: ', response);
         window.location.href = response;
+        this.cryptoLoading = false;
       },
-      error: (err) => console.error('Error sending payment method', err)
+      error: (err) => {
+        this.cryptoLoading = false;
+        console.error('Error sending payment method', err);
+      }
     });
 
     // this.paymentMethodService
