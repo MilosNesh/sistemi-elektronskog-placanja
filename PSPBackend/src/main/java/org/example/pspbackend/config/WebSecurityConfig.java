@@ -32,9 +32,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                                 "/payment/status",
                                 "/payment/*/make",
                                 "/payment-method/merchant/**",
-                                "/payment/eth/*/create",
                                 "/payment/eth/balance",
-                                "/payment/eth/send",
+                                "/payment/eth/send/*",
                                 "/payment/redirect/**",
                                 "/payment/transaction/*").permitAll()
                         .requestMatchers("/payment/*/cancel").permitAll()

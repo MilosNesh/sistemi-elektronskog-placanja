@@ -59,15 +59,15 @@ export class PaymentMethodService {
     );
   }
 
-  public createEthPayment(transactionId: string, amount: number): Observable<ETHPayment> {
-    return this.http.post<ETHPayment>(
-      `${enivironment.backenUrl}/payment/eth/${transactionId}/create`,
-      { amount }
-    );
-  }
+  // public createEthPayment(transactionId: string, amount: number): Observable<ETHPayment> {
+  //   return this.http.post<ETHPayment>(
+  //     `${enivironment.backenUrl}/payment/eth/${transactionId}/create`,
+  //     { amount }
+  //   );
+  // }
 
-  public sendEth(request: EthPaymentRequest) {
-    return this.http.post(`${enivironment.backenUrl}/payment/eth/send`, request, {responseType: 'text'});
+  public sendEth(request: EthPaymentRequest, transactionId: string) {
+    return this.http.post(`${enivironment.backenUrl}/payment/eth/send/${transactionId}`, request, {responseType: 'text'});
   }
 
   public getBalance(): Observable<string> {

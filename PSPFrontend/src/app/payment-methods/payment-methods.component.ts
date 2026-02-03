@@ -103,13 +103,12 @@ export class PaymentMethodsComponent implements OnInit {
     this.cryptoTxHash = undefined;
     
     console.log(this.amount);
-    this.paymentMethodService.createEthPayment(this.transactionId, this.amount).subscribe({
-      next: (payment: any) => {
+    
         const request = {
-          toAddress: payment.toAddress,
-          amount: payment.ethAmount
+          toAddress: "0xEbC45d552E0947cFf740426A25fD1A3f50CaCf7e",
+          amount: this.amount
         };
-          this.paymentMethodService.sendEth(request).subscribe({
+          this.paymentMethodService.sendEth(request, this.transactionId).subscribe({
           next: (txHash: string) => {
             this.cryptoTxHash = txHash;
             this.cryptoLoading = false;
@@ -120,17 +119,16 @@ export class PaymentMethodsComponent implements OnInit {
             this.cryptoLoading = false;
           }
         });
-      },
-      error: (err) => {
-        this.cryptoError = err.error || 'Failed to create ETH payment';
-        this.cryptoLoading = false;
-      }
-    });
+      
   }
 
   closeCryptoModal() {
     this.showCryptoModal = false;
-    window.location.href = 'https://localhost:4300/home';
+    this.paymentMethodService.redirect(this.transactionId).subscribe({
+        next: (res) => {
+          window.location.href = res;
+        }
+      })
   }
 
 }
