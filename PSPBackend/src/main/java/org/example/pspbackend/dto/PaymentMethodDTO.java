@@ -10,14 +10,24 @@ public class PaymentMethodDTO {
     private String type;
     private String image;
     private String description;
+    private Boolean isAvailable;
 
     public PaymentMethodDTO() {}
 
-    public PaymentMethodDTO(Long paymentMethodId, String type, String image, String description) {
+    public PaymentMethodDTO(Long paymentMethodId, String type, String image, String description, Boolean isAvailable) {
         this.paymentMethodId = paymentMethodId;
         this.type = type;
         this.image = image;
         this.description = description;
+        this.isAvailable = isAvailable;
+    }
+
+    public PaymentMethodDTO(PaymentMethod paymentMethod) {
+        this.paymentMethodId = paymentMethod.getPaymentMethodId();
+        this.type = paymentMethod.getType();
+        this.image = paymentMethod.getImage();
+        this.description = paymentMethod.getDescription();
+        this.isAvailable = paymentMethod.getIsAvailable();
     }
 
     public Long getPaymentMethodId() {
@@ -36,6 +46,8 @@ public class PaymentMethodDTO {
         return description;
     }
 
+    public Boolean getIsAvailable() { return isAvailable; }
+
     public void setPaymentMethodId(Long paymentMethodId) {
         this.paymentMethodId = paymentMethodId;
     }
@@ -51,4 +63,6 @@ public class PaymentMethodDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setIsAvailable(Boolean isAvailable) { this.isAvailable = isAvailable; }
 }

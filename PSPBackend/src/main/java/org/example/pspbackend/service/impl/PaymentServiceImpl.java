@@ -130,7 +130,6 @@ public class PaymentServiceImpl implements PaymentService {
         }
     }
 
-
     @Override
     public String sendPaymentStatusToMerchant(String transactionId, String paymentId, String payerId, String status) {
         Transaction transaction = transactionService.getById(transactionId);

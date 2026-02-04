@@ -48,6 +48,21 @@ export class AuthService {
     return ""
   }
 
+  public getRole(): string {
+    const decoded = this.getDecodedToken();
+    // Vratiće npr. 'ADMIN' ili 'MERCHANT'
+    return decoded?.role || "";
+  }
+
+  public isAdmin(): boolean {
+    return this.getRole() === 'ROLE_ADMIN';
+  }
+
+
+  public isSuperAdmin(): boolean {
+    return this.getRole() === 'ROLE_SUPERADMIN';
+  }
+
   public getHeaderToken() : HttpHeaders {
     return new HttpHeaders({
       'Authorization': `Bearer ${this.getToken()}`

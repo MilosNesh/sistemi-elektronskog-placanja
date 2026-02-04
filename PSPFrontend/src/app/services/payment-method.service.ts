@@ -18,8 +18,12 @@ export class PaymentMethodService {
     return this.http.get<PaymentMethod[]>(`${enivironment.backenUrl}/payment-method/merchant/${id}`, { headers: this.authService.getHeaderToken() });
   }
 
-    public getPaymentMethods() : Observable<PaymentMethod[]>{
+  public getPaymentMethods() : Observable<PaymentMethod[]>{
     return this.http.get<PaymentMethod[]>(`${enivironment.backenUrl}/payment-method/all`, { headers: this.authService.getHeaderToken() });
+  }
+
+  public getAvailablePaymentMethods() : Observable<PaymentMethod[]>{
+    return this.http.get<PaymentMethod[]>(`${enivironment.backenUrl}/payment-method/all-available`, { headers: this.authService.getHeaderToken() });
   }
 
   public selectPaymentMethod(paymentMethod: PaymentMethod, transactionId: string) : Observable<string>{
@@ -72,5 +76,17 @@ export class PaymentMethodService {
 
   public getBalance(): Observable<string> {
     return this.http.get<string>(`${enivironment.backenUrl}/payment/eth/balance`);
+  }
+
+  public createPaymentMethod(paymentMethod: PaymentMethod) : Observable<PaymentMethod> {
+    return this.http.post<PaymentMethod>(`${enivironment.backenUrl}/payment-method/create`, paymentMethod, { headers: this.authService.getHeaderToken() });
+  }
+
+  public activatePaymentMethod(paymentMethod: PaymentMethod): Observable<PaymentMethod> {
+    return this.http.put<PaymentMethod>(`${enivironment.backenUrl}/payment-method/${paymentMethod.paymentMethodId}/activate`, paymentMethod, { headers: this.authService.getHeaderToken() });
+  }
+
+  public deactivatePaymentMethod(paymentMethod: PaymentMethod): Observable<PaymentMethod> {
+    return this.http.put<PaymentMethod>(`${enivironment.backenUrl}/payment-method/${paymentMethod.paymentMethodId}/deactivate`, paymentMethod, { headers: this.authService.getHeaderToken() });
   }
 }

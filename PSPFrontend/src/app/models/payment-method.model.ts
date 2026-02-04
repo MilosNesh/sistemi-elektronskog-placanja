@@ -3,4 +3,5 @@ export interface PaymentMethod {
   type: string;
   image?: string;
   description?: string;
+  isAvailable?: boolean;
 }

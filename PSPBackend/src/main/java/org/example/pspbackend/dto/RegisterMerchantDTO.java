@@ -1,38 +1,24 @@
 package org.example.pspbackend.dto;
 
-import lombok.*;
 import org.example.pspbackend.domain.Merchant;
-import org.example.pspbackend.domain.MerchantPaymentMethod;
-import org.example.pspbackend.domain.PaymentMethod;
 import org.example.pspbackend.domain.Role;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-public class MerchantDTO {
+public class RegisterMerchantDTO {
     private Long merchantId;
     private String merchantEmail;
     private String sellerUrl;
-    private Integer port;
-    private String successUrl;
-    private String failedUrl;
-    private String errorUrl;
     private List<MerchantPaymentMethodDTO> merchantPaymentMethods;
     private Role role;
+    private String password;
 
-    public MerchantDTO() {}
+    public RegisterMerchantDTO() {}
 
-    public MerchantDTO(Merchant merchant) {
+    public RegisterMerchantDTO(Merchant merchant) {
         this.merchantId = merchant.getMerchantId();
         this.merchantEmail = merchant.getMerchantEmail();
         this.sellerUrl = merchant.getSellerUrl();
-        this.port = merchant.getPort();
-        this.successUrl = merchant.getSuccessUrl();
-        this.failedUrl = merchant.getFailedUrl();
-        this.errorUrl = merchant.getErrorUrl();
         this.role = merchant.getRole();
 
         this.merchantPaymentMethods = merchant.getMerchantPaymentMethods()
@@ -57,25 +43,11 @@ public class MerchantDTO {
         return sellerUrl;
     }
 
-    public Integer getPort() {
-        return port;
-    }
-
-    public String getSuccessUrl() {
-        return successUrl;
-    }
-
-    public String getErrorUrl() {
-        return errorUrl;
-    }
-
-    public String getFailedUrl() {
-        return failedUrl;
-    }
-
     public List<MerchantPaymentMethodDTO> getMerchantPaymentMethods() {
         return merchantPaymentMethods;
     }
 
     public Role getRole() { return role; }
+
+    public String getPassword() { return password; }
 }

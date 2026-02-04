@@ -27,14 +27,17 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/merchant/login").permitAll()
                         .requestMatchers("/payment/merchant-request",
                                 "/payment/status",
                                 "/payment/*/make",
                                 "/payment-method/merchant/**",
+                                "/payment-method/merchant/*",
                                 "/payment/eth/balance",
                                 "/payment/eth/send/*",
                                 "/payment/redirect/**",
+                                "/payment/methods/**",
                                 "/payment/transaction/*").permitAll()
                         .requestMatchers("/payment/*/cancel").permitAll()
                         .requestMatchers("/payment/*/success").permitAll()
@@ -45,6 +48,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
+
         return http.build();
     }
 
@@ -52,7 +56,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("https://localhost:4200")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }

@@ -51,6 +51,10 @@ public class Merchant {
     @Column(name = "error_url")
     private String errorUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+
     public Merchant() {}
 
     public Merchant(MerchantDTO merchantDTO) {
@@ -61,7 +65,7 @@ public class Merchant {
         this.successUrl = merchantDTO.getSuccessUrl();
         this.failedUrl = merchantDTO.getFailedUrl();
         this.errorUrl = merchantDTO.getErrorUrl();
-
+        this.role = merchantDTO.getRole();
     }
 
     public Long getMerchantId() {
@@ -132,4 +136,7 @@ public class Merchant {
         return errorUrl;
     }
 
+    public Role getRole() { return role; }
+
+    public void setRole(Role role) { this.role = role; }
 }

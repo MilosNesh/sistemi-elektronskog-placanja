@@ -20,7 +20,21 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
                         pm.getPaymentMethodId(),
                         pm.getType(),
                         pm.getImage(),
-                        pm.getDescription()
+                        pm.getDescription(),
+                        pm.getIsAvailable()
+                ))
+                .toList();
+    }
+
+    public List<PaymentMethodDTO> getAllAvailable() {
+        return paymentMethodRepository.findAll().stream()
+                .filter(pm -> pm.getIsAvailable() == true)
+                .map(pm -> new PaymentMethodDTO(
+                        pm.getPaymentMethodId(),
+                        pm.getType(),
+                        pm.getImage(),
+                        pm.getDescription(),
+                        pm.getIsAvailable()
                 ))
                 .toList();
     }
@@ -33,8 +47,30 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
                         pm.getPaymentMethodId(),
                         pm.getType(),
                         pm.getImage(),
-                        pm.getDescription()
+                        pm.getDescription(),
+                        pm.getIsAvailable()
                 ))
                 .toList();
+    }
+
+    public PaymentMethodDTO save(PaymentMethodDTO paymentMethodDTO) {
+        PaymentMethod paymentMethod = new PaymentMethod();
+        paymentMethod.setType(paymentMethodDTO.getType());
+        paymentMethod.setImage(paymentMethodDTO.getImage());
+        paymentMethod.setDescription(paymentMethodDTO.getDescription());
+
+        PaymentMethod savedEntity = paymentMethodRepository.save(paymentMethod);
+
+        return new PaymentMethodDTO(savedEntity);
+    }
+
+    public PaymentMethod setMethodAvailability(Long paymentMethodId, Boolean isAvailable){
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(paymentMethodId)
+                .orElseThrow(() -> new RuntimeException("Payment method not found"));
+
+        paymentMethod.setIsAvailable(isAvailable);
+        paymentMethodRepository.save(paymentMethod);
+
+        return paymentMethod;
     }
 }

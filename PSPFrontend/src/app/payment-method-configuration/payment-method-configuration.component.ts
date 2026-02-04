@@ -32,6 +32,7 @@ export class PaymentMethodConfigurationComponent {
   ngOnInit(){
     this.merchantService.getByEmail(this.authService.getEmail()).subscribe({
       next: (response) => {
+        console.log("Ucitan merchant: ", response);
         this.merchant = response;
         this.loadPaymentMethods();
       },
@@ -42,7 +43,7 @@ export class PaymentMethodConfigurationComponent {
   }
 
   loadPaymentMethods(){
-    this.paymentMethodService.getPaymentMethods().subscribe({
+    this.paymentMethodService.getAvailablePaymentMethods().subscribe({
       next: (response) => {
         this.paymentMethods = response;
         console.log("Payment methods: ", response);
@@ -58,9 +59,9 @@ export class PaymentMethodConfigurationComponent {
       return false;
     }
 
-    const method = this.merchant.merchantPaymentMethods.find(
-      pm => pm.merchantPaymentMethodId === paymentMethodId
-    );
+  const method = this.merchant.merchantPaymentMethods.find(pm => {
+    return pm.paymentMethodId === paymentMethodId;
+  });
 
     return method ? method.enabled : false;
   }
@@ -69,9 +70,15 @@ export class PaymentMethodConfigurationComponent {
     const isChecked = event.target.checked;
 
     if (!isChecked) {
-    const enabledCount = this.merchant.merchantPaymentMethods.filter(pm => pm.enabled).length;
+    const enabledCount = this.paymentMethods.filter(pm => {
+            const merchantMethod = this.merchant.merchantPaymentMethods.find(
+                mpm => mpm.paymentMethodId === pm.paymentMethodId
+            );
+            return merchantMethod && merchantMethod.enabled;
+        }).length;
 
-    if (enabledCount === 1) {
+    console.log("Broj omogućenih metoda koji su u listi: ", enabledCount);
+    if (enabledCount <= 1) {
       event.target.checked = true;
       this.feedbackMessage = "You must have at least one payment method enabled";
       return;
