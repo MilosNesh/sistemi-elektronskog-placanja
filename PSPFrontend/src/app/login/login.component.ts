@@ -49,8 +49,17 @@ export class LoginComponent {
       next: (res) => {
         localStorage.setItem("psp_token", res);
         this.authService.refreshToken();
-        console.log("Email: ", this.authService.getEmail())
-        this.router.navigate(["payment-method-config"]);
+        console.log("Role: ", this.authService.getRole())
+        console.log("Is admin?: ", this.authService.isAdmin())
+        if(this.authService.isAdmin()){
+          this.router.navigate(["payment-method-dashboard"]);
+        }
+        else if(this.authService.isSuperAdmin()){
+          this.router.navigate(["merchant/register"]);
+        }
+        else{
+          this.router.navigate(["payment-method-config"]);
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.errorMessage = err.error?.message || "Greška prilikom prijave.";

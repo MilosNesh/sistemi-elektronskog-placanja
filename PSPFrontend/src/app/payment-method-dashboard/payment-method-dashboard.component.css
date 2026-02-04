@@ -4,6 +4,9 @@
   padding: 24px;
   font-family: Arial, sans-serif;
 }
+.payment-heading{
+  text-align: center;
+}
 
 .payment-methods {
   display: flex;
@@ -59,53 +62,79 @@
   transform: scale(1.4);
 }
 
-/* Callback URLs */
-.callback-urls {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
+/* ------------------------------------- input form ------------------------------------------- */
+
+.divider {
+  margin: 40px 0;
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form-container {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+  text-align: left;
 }
 
 .form-group label {
-  margin-bottom: 6px;
   font-size: 14px;
   font-weight: 600;
+  color: #374151;
 }
 
-.form-group input {
-  padding: 10px 12px;
+.form-group input,
+.form-group textarea {
+  padding: 12px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
   font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Submit */
-.actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 32px;
+/* Fokus efekat sa tvojom plavom bojom */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #bbdefb;
+  box-shadow: 0 0 0 3px rgba(187, 222, 251, 0.4);
 }
 
-.actions button {
-  padding: 12px 20px;
-  border-radius: 10px;
-  border: none;
-  background: #2563eb;
+.submit-btn {
+  margin-top: 10px;
+  padding: 14px;
+  background-color: #2196f3; /* Tvoja plava */
   color: white;
-  font-size: 14px;
-  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s;
 }
 
-.actions button:hover {
-  background: #1d4ed8;
+.submit-btn:hover:not(:disabled) {
+  background-color: #1976d2;
 }
+
+.submit-btn:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
 
 .feedback {
   padding: 12px;

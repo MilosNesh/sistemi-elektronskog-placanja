@@ -3,6 +3,7 @@ package org.example.pspbackend.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.pspbackend.dto.PaymentMethodDTO;
 
 @Getter
 @Setter
@@ -26,6 +27,24 @@ public class PaymentMethod {
     @Column(name = "description", length = 255)
     private String description;
 
+    @Column(name = "is_available", nullable = false)
+    private Boolean isAvailable = true;
+
+    public PaymentMethod() {}
+
+    public PaymentMethod(String type, String image, String description, Boolean isAvailable) {
+        this.type = type;
+        this.image = image;
+        this.description = description;
+        this.isAvailable = isAvailable;
+    }
+
+    public PaymentMethod(PaymentMethodDTO paymentMethodDTO) {
+        this.type = paymentMethodDTO.getType();
+        this.image = paymentMethodDTO.getImage();
+        this.description = paymentMethodDTO.getDescription();
+    }
+
     public Long getPaymentMethodId() {
         return paymentMethodId;
     }
@@ -40,5 +59,27 @@ public class PaymentMethod {
 
     public String getDescription() {
         return description;
+    }
+
+    public Boolean getIsAvailable() { return isAvailable; }
+
+    public void setPaymentMethodId(Long paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 }

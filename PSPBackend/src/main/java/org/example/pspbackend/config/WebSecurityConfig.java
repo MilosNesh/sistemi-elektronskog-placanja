@@ -27,12 +27,14 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         })
                 )
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/merchant/login").permitAll()
                         .requestMatchers("/payment/merchant-request",
                                 "/payment/status",
                                 "/payment/*/make",
                                 "/payment-method/merchant/*",
-                                "/payment/redirect/**").permitAll()
+                                "/payment/redirect/**",
+                                "/payment/methods/**").permitAll()
 
                         .anyRequest().authenticated()
                 )
@@ -48,7 +50,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("https://localhost:4200")
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }

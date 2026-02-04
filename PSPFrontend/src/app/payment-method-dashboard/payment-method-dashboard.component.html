@@ -1,0 +1,57 @@
+<div class="payment-config-container">
+
+  <h1 class="payment-heading">All Payment Methods</h1>
+
+
+<div *ngIf="feedbackMessage" class="feedback">
+  {{ feedbackMessage }}
+</div>
+
+
+  <div class="payment-methods">
+    <div
+      class="payment-card"
+      *ngFor="let method of paymentMethods"
+      [attr.data-method]="method.type"
+    >
+      <img [src]="method.image || 'assets/default.png'" [alt]="method.type" />
+      <div class="payment-info">
+        <h3>{{ method.type }}</h3>
+        <p>{{ method.description }}</p>
+      </div>
+      <label class="payment-label">
+      <input type="checkbox"
+             [checked]="isMethodAvailable(method)"
+             (change)="toggleMethod(method, $event)" />
+    </label>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="form-container">
+  <h2 class="payment-heading">Add New Payment Method</h2>
+
+  <form (ngSubmit)="onAddMethod()" class="payment-form">
+    <div class="form-group">
+      <label>Payment Type</label>
+      <input name="type" [(ngModel)]="newPaymentMethod.type" placeholder="e.g. BITCOIN" required>
+    </div>
+
+    <div class="form-group">
+      <label>Image Path/URL</label>
+      <input name="image" [(ngModel)]="newPaymentMethod.image" placeholder="/images/example.png">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea name="description" [(ngModel)]="newPaymentMethod.description" rows="3" placeholder="Short explanation..."></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">
+      Save Method
+    </button>
+  </form>
+</div>
+
+</div>

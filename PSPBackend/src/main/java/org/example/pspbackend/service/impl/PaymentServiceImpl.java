@@ -116,5 +116,4 @@ public class PaymentServiceImpl implements PaymentService {
                 callMerchantApiService.notifyPaymentError(merchant.getErrorUrl(), transaction.getMerchantOrderId());
         }
     }
-
 }

@@ -31,6 +31,14 @@ public class MerchantPaymentMethod {
     @Column(name = "is_enabled", nullable = false)
     private Boolean isEnabled = true;
 
+    public MerchantPaymentMethod() {}
+
+    public MerchantPaymentMethod(Merchant merchant, PaymentMethod paymentMethod) {
+        this.merchant = merchant;
+        this.paymentMethod = paymentMethod;
+        this.isEnabled = true;
+    }
+
     public void setMerchantPaymentMethodId(Long merchantPaymentMethodId) {
         this.merchantPaymentMethodId = merchantPaymentMethodId;
     }

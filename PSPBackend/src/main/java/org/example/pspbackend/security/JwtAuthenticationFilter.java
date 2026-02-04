@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,11 +51,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (merchant != null && tokenUtil.validateToken(jwt, merchant)) {
 
+                String roleName = tokenUtil.getRoleFromToken(jwt);
+
+                // 2. Pretvori String u GrantedAuthority
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleName);
+
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
                                 email,
                                 null,
-                                List.of()
+                                List.of(authority)
                         );
                 //authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

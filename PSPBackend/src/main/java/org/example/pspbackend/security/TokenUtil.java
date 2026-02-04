@@ -28,7 +28,11 @@ public class TokenUtil {
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
     public String generateToken(Merchant merchant) {
+        Claims claims = Jwts.claims().setSubject(merchant.getMerchantEmail());
+        claims.put("role", merchant.getRole().name());
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setIssuer(APP_NAME)
                 .setSubject(merchant.getMerchantEmail())
                 .setIssuedAt(new Date())
@@ -36,6 +40,10 @@ public class TokenUtil {
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
     }
 
+    public String getRoleFromToken(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        return claims.get("role", String.class);
+    }
 
     public String getToken(HttpServletRequest request) {
         String authHeader = request.getHeader(AUTH_HEADER);

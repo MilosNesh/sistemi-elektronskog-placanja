@@ -1,0 +1,71 @@
+<div class="main-layout">
+
+  <div class="cards-column">
+    <h2 class="section-title">Exsisting merchants</h2>
+    <div class="merchant-list">
+      <div class="merchant-card" *ngFor="let m of merchants">
+        <div class="card-header">
+          <div class="header-info">
+            <span class="id-badge">ID: {{ m.merchantId }}</span>
+            <h3>{{ m.merchantEmail }}</h3>
+          </div>
+          <span class="status-dot"></span>
+        </div>
+
+        <div class="card-body">
+          <div class="url-info">
+            <div class="url-row">
+              <span class="label">Seller URL:</span>
+              <span class="value">{{ m.sellerUrl }}</span>
+            </div>
+            <div class="url-row">
+              <span class="label">Port:</span>
+              <span class="value">{{ m.port }}</span>
+            </div>
+            <div class="url-row">
+              <span class="label">Success URL:</span>
+              <span class="value link-color">{{ m.successUrl }}</span>
+            </div>
+            <div class="url-row">
+              <span class="label">Failed URL:</span>
+              <span class="value link-color">{{ m.failedUrl }}</span>
+            </div>
+            <div class="url-row">
+              <span class="label">Error URL:</span>
+              <span class="value link-color">{{ m.errorUrl }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-column">
+    <div class="form-sticky">
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit()" class="register-card">
+        <h2>Register</h2>
+        <p class="subtitle">Add new merchant to system</p>
+
+        <div class="form-group">
+          <label>Email address</label>
+          <input type="email" name="merchantEmail" [(ngModel)]="merchant.merchantEmail" placeholder="primer@firma.com" required />
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" [(ngModel)]="merchant.password" placeholder="Min. 8 karaktera" required />
+        </div>
+
+        <div class="form-group">
+          <label>Merchant webshop URL</label>
+          <input type="text" name="sellerUrl" [(ngModel)]="merchant.sellerUrl" placeholder="https://..." required />
+        </div>
+
+        <button type="submit" [disabled]="!registerForm.form.valid" class="submit-btn">
+          Add Merchant
+        </button>
+      </form>
+    </div>
+  </div>
+
+</div>
