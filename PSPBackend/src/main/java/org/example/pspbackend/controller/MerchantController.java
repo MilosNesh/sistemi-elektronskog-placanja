@@ -7,6 +7,8 @@ import org.example.pspbackend.dto.MerchantDTO;
 import org.example.pspbackend.dto.RegisterMerchantDTO;
 import org.example.pspbackend.security.TokenUtil;
 import org.example.pspbackend.service.MerchantService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -27,15 +29,20 @@ public class MerchantController {
     @Value("${server.port}")
     private String port;
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDetailsDTO loginDetailsDTO) {
         Merchant merchant = merchantService.getByEmail(loginDetailsDTO.getEmail());
+
         if(merchant == null) {
+            logger.warn("event=LOGIN | user={} | result=FAILURE | description=User not found", loginDetailsDTO.getEmail());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Merchant not found");
         }
-        if(!merchantService.login(loginDetailsDTO))
+        if(!merchantService.login(loginDetailsDTO)) {
+            logger.warn("event=LOGIN | user={} | result=FAILURE | description=Invalid password", loginDetailsDTO.getEmail());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
-
+        }
+        logger.info("event=LOGIN | user={} | result=SUCCESS | description=User logged in", loginDetailsDTO.getEmail());
         String jwt = tokenUtil.generateToken(merchant);
         return ResponseEntity.ok(jwt);
     }
@@ -81,8 +88,10 @@ public class MerchantController {
     public ResponseEntity<RegisterMerchantDTO> create(@RequestBody RegisterMerchantDTO merchantDTO) {
         RegisterMerchantDTO registerMerchantDTO = merchantService.save(merchantDTO);
         if(registerMerchantDTO == null){
+            logger.warn("event=REGISTER | user={} | result=FAILURE | description=User already exist with entered email", merchantDTO.getMerchantEmail());
             return ResponseEntity.notFound().build();
         }
+        logger.warn("event=REGISTER | user={} | result=SUCCESS | description=User registered", merchantDTO.getMerchantEmail());
         return ResponseEntity.ok(registerMerchantDTO);
     }
 }
