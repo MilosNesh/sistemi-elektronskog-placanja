@@ -121,7 +121,12 @@ public class PaymentService {
         validateExpiryDate(request.getExpiryDate());
         validateSecurityCode(request.getSecurityCode());
 
-        Customer customer = resolveAccountFromPan(request.getPan());
+        String pan = request.getPan();
+        String holder = request.getCardHolderName();
+
+        request.setSecurityCode(null);
+
+        Customer customer = resolveAccount(pan, holder);
 
         if(customer.getBalance() < payment.getAmount()){
             payment.setStatus(PaymentStatus.FAILED);
@@ -317,9 +322,9 @@ public class PaymentService {
         }
     }
 
-    private Customer resolveAccountFromPan(String pan) {
+    private Customer resolveAccount(String pan, String fullName) {
         String last4 = pan.substring(pan.length() - 4);
-        return customerRepository.findByCardLast4(last4)
+        return customerRepository.findByCardLast4AndFullName(last4, fullName)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
     }
 }

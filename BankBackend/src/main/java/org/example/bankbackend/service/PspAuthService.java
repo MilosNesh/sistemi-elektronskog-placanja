@@ -26,8 +26,8 @@ public class PspAuthService {
             String dataToSign = objectMapper.writeValueAsString(requestBody);
 
             String expectedSignature = hmacUtil.generateHmac(HMAC_ALGORITHM, dataToSign, sharedSecret);
-            System.out.println("EXPECTED:" + expectedSignature);
-            System.out.println("RECEIVED:" + receivedSignature);
+//            System.out.println("EXPECTED:" + expectedSignature);
+//            System.out.println("RECEIVED:" + receivedSignature);
             if(!expectedSignature.equals(receivedSignature)){
                 throw new SecurityException("Invalid HMAC signature");
             }
