@@ -6,6 +6,8 @@ import org.example.bankbackend.domain.paymentResponse.PaymentResponse;
 import org.example.bankbackend.repository.CustomerRepository;
 import org.example.bankbackend.repository.MerchantRepository;
 import org.example.bankbackend.repository.PaymentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +23,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final CustomerRepository customerRepository;
     private final PspCallbackService pspCallbackService;
+    private final Logger logger = LoggerFactory.getLogger(PaymentService.class);
 
     public PaymentService(MerchantRepository merchantRepository, PaymentRepository paymentRepository, CustomerRepository customerRepository,
                           PspCallbackService pspCallbackService) {
@@ -35,10 +38,12 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("Merchant not found"));
 
         if(!Boolean.TRUE.equals(merchant.getActive())) {
+            logger.warn("event=CREATE | merchant={} | result=FAILURE | description=Payment not created, merchant is not active", merchant.getId());
             throw new IllegalStateException("Merchant is not active");
         }
 
         if(paymentRepository.existsByStan(request.getStan())){
+            logger.warn("event=CREATE | merchant={} | result=FAILURE | description=Payment not created, duplicate stan", merchant.getId());
             throw new IllegalArgumentException("Duplicate STAN");
         }
 
@@ -60,6 +65,8 @@ public class PaymentService {
         }
 
         payment = paymentRepository.save(payment);
+
+        logger.info("event=CREATE | merchant={} | payment={} | result=SUCCESS | description=Payment created", merchant.getId(), payment.getId());
 
         return new PaymentInitResponse(payment.getId(), "https://localhost:4100/pay/" + payment.getId() + type);
     }
@@ -106,13 +113,14 @@ public class PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         if (payment.getAttemptCount() > 0) {
+            logger.warn("event=PAY | payment = {} | merchant={} | payer={} | channel=CARD | amount={} | currency={} | result=FAILURE | description=Payment already attempted", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             throw new IllegalStateException("Payment already attempted");
         }
 
         if (payment.getExpiresAt().isBefore(LocalDateTime.now())) {
             payment.setStatus(PaymentStatus.EXPIRED);
             paymentRepository.save(payment);
-
+            logger.warn("event=PAY | payment = {} | merchant={} | payer={} | channel=CARD | amount={} | currency={} | result=FAILURE | description=Payment expired", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             pspCallbackService.notifyPsp(payment);
             throw new IllegalStateException("Payment expired");
         }
@@ -132,7 +140,7 @@ public class PaymentService {
             payment.setStatus(PaymentStatus.FAILED);
             payment.setAttemptCount(1);
             paymentRepository.save(payment);
-
+            logger.warn("event=PAY | payment = {} | merchant={} | payer={} | channel=CARD | amount={} | currency={} | result=FAILURE | description=Not enough money", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             pspCallbackService.notifyPsp(payment);
             throw new IllegalStateException("Insufficient funds");
         }
@@ -146,8 +154,9 @@ public class PaymentService {
 
         customerRepository.save(customer);
         paymentRepository.save(payment);
-
+        logger.info("event=PAY  | payment = {} | merchant={} | payer={} | channel=CARD | amount={} | currency={} | result=SUCCESS | description=Funds are reserved", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
         pspCallbackService.notifyPsp(payment);
+        logger.info("event=NOTIFY |  payment = {} | result=SUCCESS | description=PSP is notified", paymentId);
 
         return new PaymentResponse(
                 payment.getStatus(),
@@ -169,16 +178,18 @@ public class PaymentService {
         if (payment.getExpiresAt().isBefore(LocalDateTime.now())) {
             payment.setStatus(PaymentStatus.EXPIRED);
             paymentRepository.save(payment);
-
+            logger.warn("event=PAY | payment={} | merchant={} | payer={} | channel=QR | amount={} | currency={} | result=FAILURE | description=Payment expired", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             pspCallbackService.notifyPsp(payment);
             throw new IllegalStateException("Payment expired");
         }
 
         if (payment.getAttemptCount() > 0) {
+            logger.warn("event=PAY | payment={} | merchant={} | payer={} |  channel=QR | amount={} | currency={} | result=FAILURE | description=Payment already attempted", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             throw new IllegalStateException("Payment already attempted");
         }
         // validacija amount i currency
         if (!payment.getCurrency().equals(qr.currency()) || payment.getAmount() != qr.amount()) {
+            logger.warn("event=PAY | payment={} | merchant={} | payer={} | channel=QR | amount={} | currency={} | result=FAILURE | description=QR payment data mismatch", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             throw new IllegalArgumentException("QR payment data mismatch");
         }
 
@@ -194,7 +205,7 @@ public class PaymentService {
             payment.setStatus(PaymentStatus.FAILED);
             payment.setAttemptCount(1);
             paymentRepository.save(payment);
-
+            logger.warn("event=PAY | payment={} | merchant={} | payer={} | channel=QR | amount={} | currency={} | result=FAILURE | description=Not enough money", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
             pspCallbackService.notifyPsp(payment);
             throw new IllegalStateException("Insufficient funds");
         }
@@ -209,8 +220,9 @@ public class PaymentService {
 
         paymentRepository.save(payment);
         customerRepository.save(customer);
+        logger.info("event=PAY | payment={} | merchant={} | payer={} | channel=QR | amount={} | currency={} | result=SUCCESS | description=Payment success", paymentId, payment.getMerchant().getId(), payment.getCustomer().getId(), payment.getAmount(), payment.getCurrency());
         pspCallbackService.notifyPsp(payment);
-
+        logger.info("event=NOTIFY |  payment={} | result=SUCCESS | description=PSP is notified.", paymentId);
         return new PaymentResponse(
                 payment.getStatus(),
                 payment.getGlobalTransactionId(),
@@ -232,7 +244,7 @@ public class PaymentService {
         Merchant merchant = payment.getMerchant();
 
         String amount = String.format("%.2f", payment.getAmount()).replace(".",",");
-
+        logger.info("event=CREATE |  payment={} | result=SUCCESS | description=QR code generated", paymentId);
         return String.join("|",
                 "K:PR",
                 "V:01",

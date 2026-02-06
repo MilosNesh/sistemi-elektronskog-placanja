@@ -6,6 +6,8 @@ import com.paypal.base.rest.PayPalRESTException;
 import org.example.pspbackend.dto.PaymentMethodDTO;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.TransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class PayPalPaymentProvider implements PaymentProviderService {
     @Value("${paypal.base-url}")
     private String baseUrl;
 
+    private final Logger logger = LoggerFactory.getLogger(PayPalPaymentProvider.class);
+
     @Override
     public String getSupportedPaymentType() {
         return "PAYPAL";
@@ -45,7 +49,7 @@ public class PayPalPaymentProvider implements PaymentProviderService {
             Payment payment = createPayment(transaction.getAmount(), transaction.getCurrency(), "paypal", "sale", "Test payment", cancelUrl, successUrl);
             for(var link: payment.getLinks()){
                 if(link.getRel().equals("approval_url")){
-                    System.out.println("Link pronadjen: " + link.getHref());
+                    logger.info("event=PAYPAL_PAY | user={} | transaction={} | result=SUCCESS | description=Redirected to paypal payment", transaction.getMerchant().getMerchantEmail(), transaction.getId());
                     return link.getHref();
                 }
             }

@@ -10,6 +10,8 @@ import org.example.pspbackend.dto.PaymentInitResponse;
 import org.example.pspbackend.dto.PaymentMethodDTO;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.TransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class CardPaymentProvider implements PaymentProviderService {
     @Autowired
     private HmacUtil hmacUtil;
 
+    private  final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public String getSupportedPaymentType() {
         return "CREDIT_CARD";
@@ -61,9 +64,9 @@ public class CardPaymentProvider implements PaymentProviderService {
         transaction.setStan(stan);
         transactionService.save(transaction);
 
+        logger.info("event=UPDATE | user={} | transaction={} | result=SUCCESS | description=Transaction updated", transaction.getMerchant().getMerchantEmail(), transaction.getId());
 
-        System.out.println("payment id: " + paymentInitResponse.getPaymentId() );
-        System.out.println("payment url: " + paymentInitResponse.getPaymentUrl() );
+        logger.info("event=BANK_PAY | user={} | transaction={} | result=SUCCESS | description=Redirected to bank payment", transaction.getMerchant().getMerchantEmail(), transaction.getId());
 
         return paymentInitResponse.getPaymentUrl();
     }

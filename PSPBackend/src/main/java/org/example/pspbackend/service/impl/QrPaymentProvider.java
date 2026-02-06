@@ -10,6 +10,8 @@ import org.example.pspbackend.dto.PaymentInitResponse;
 import org.example.pspbackend.dto.PaymentMethodDTO;
 import org.example.pspbackend.service.PaymentProviderService;
 import org.example.pspbackend.service.TransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class QrPaymentProvider implements PaymentProviderService {
     private ObjectMapper objectMapper;
     @Autowired
     private HmacUtil hmacUtil;
+
+    private final Logger logger = LoggerFactory.getLogger(QrPaymentProvider.class);
     @Override
     public String getSupportedPaymentType() {
         return "QR_CODE";
@@ -60,9 +64,8 @@ public class QrPaymentProvider implements PaymentProviderService {
         transaction.setStan(stan);
         transactionService.save(transaction);
 
-
-        System.out.println("payment id: " + paymentInitResponse.getPaymentId() );
-        System.out.println("payment url: " + paymentInitResponse.getPaymentUrl() );
+        logger.info("event=UPDATE | user={} | transaction={} | result=SUCCESS | description=Transaction updated", transaction.getMerchant().getMerchantEmail(), transaction.getId());
+        logger.info("event=BANK_QR_PAY | user={} | transaction={} | result=SUCCESS | description=Redirected to bank qr payment", transaction.getMerchant().getMerchantEmail(), transaction.getId());
 
         return paymentInitResponse.getPaymentUrl();
     }
