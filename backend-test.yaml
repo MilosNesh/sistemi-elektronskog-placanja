@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moj-backend-deployment
+spec:
+  replicas: 2  # Evo tvoje dve instance za Rolling Update!
+  selector:
+    matchLabels:
+      app: moj-backend
+  template:
+    metadata:
+      labels:
+        app: moj-backend
+    spec:
+      containers:
+      - name: moj-backend-kontejner
+        image: moj-backend:v1
+        imagePullPolicy: Never # Govori K8s-u da ne ide na internet po sliku
+        ports:
+        - containerPort: 8080
