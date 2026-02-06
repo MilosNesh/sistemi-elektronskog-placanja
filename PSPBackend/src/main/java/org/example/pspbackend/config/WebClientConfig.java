@@ -2,6 +2,7 @@ package org.example.pspbackend.config;
 
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -16,32 +17,44 @@ import java.security.cert.X509Certificate;
 
 @Configuration
 public class WebClientConfig {
+//    @Bean
+//    public WebClient webClient() throws Exception {
+//        // učitaj root CA crt iz resources
+//        InputStream caInput = getClass().getClassLoader().getResourceAsStream("sepCA.crt");
+//        if (caInput == null) throw new RuntimeException("root-ca.crt not found");
+//
+//        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+//        X509Certificate caCert = (X509Certificate) cf.generateCertificate(caInput);
+//
+//        // napravi KeyStore u memoriji
+//        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+//        trustStore.load(null, null); // prazni KeyStore
+//        trustStore.setCertificateEntry("my-root-ca", caCert);
+//
+//        // TrustManagerFactory
+//        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+//        tmf.init(trustStore);
+//
+//        // Netty SslContext
+//        SslContext sslContext = SslContextBuilder.forClient()
+//                .trustManager(tmf)
+//                .build();
+//
+//        HttpClient httpClient = HttpClient.create()
+//                .secure(spec -> spec.sslContext(sslContext));
+//
+//        return WebClient.builder()
+//                .clientConnector(new ReactorClientHttpConnector(httpClient))
+//                .build();
+//    }
 
     @Bean
-    public WebClient webClient() throws Exception {
-        // učitaj root CA crt iz resources
-        InputStream caInput = getClass().getClassLoader().getResourceAsStream("sepCA.crt");
-        if (caInput == null) throw new RuntimeException("root-ca.crt not found");
-
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        X509Certificate caCert = (X509Certificate) cf.generateCertificate(caInput);
-
-        // napravi KeyStore u memoriji
-        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        trustStore.load(null, null); // prazni KeyStore
-        trustStore.setCertificateEntry("my-root-ca", caCert);
-
-        // TrustManagerFactory
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(trustStore);
-
-        // Netty SslContext
-        SslContext sslContext = SslContextBuilder.forClient()
-                .trustManager(tmf)
-                .build();
-
+    public WebClient webClient() {
         HttpClient httpClient = HttpClient.create()
-                .secure(spec -> spec.sslContext(sslContext));
+                .secure(ssl -> ssl.sslContext(
+                        SslContextBuilder.forClient()
+                                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                ));
 
         return WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
