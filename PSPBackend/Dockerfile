@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./target/*.jar app.jar
 
 # 4. Kažemo kontejneru na kom portu aplikacija sluša (Spring Boot je obično 8080)
-EXPOSE 8080
+EXPOSE 8445
 
 # 5. Komanda koja pokreće aplikaciju
 ENTRYPOINT ["java", "-jar", "app.jar"]

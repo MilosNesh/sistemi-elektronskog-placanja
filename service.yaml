@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: psp-backend-service
+spec:
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800 
+    app: psp-backend 
+  
+  ports:
+    - protocol: TCP
+      port: 8445      # Port koji se poziva spolja 
+      targetPort: 8445 # Port na kojem Spring Boot sluša u kontejneru
+  
+  type: LoadBalancer
