@@ -1,7 +1,7 @@
 <div class="body">
     <h1 *ngIf="reservation === null">Payment error</h1>
     <h1 *ngIf="reservation !== null">Payment status: </h1>
-    <h1>{{reservation?.paymentStatus}}</h1>
+    <h1 [ngStyle]="{color: reservation?.paymentStatus==='PAID' ? 'green' : 'red'}">{{reservation?.paymentStatus}}</h1>
     <h2>{{reservation?.vehicleDTO?.model}}</h2>
     <h2>{{reservation?.totalPrice}} {{reservation?.currency}}</h2>
 </div>
