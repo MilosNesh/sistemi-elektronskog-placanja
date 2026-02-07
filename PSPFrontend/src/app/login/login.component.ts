@@ -47,19 +47,7 @@ export class LoginComponent {
     this.recoveryMessage = ""
     this.authService.login(loginDetails).subscribe({
       next: (res) => {
-        localStorage.setItem("psp_token", res);
-        this.authService.refreshToken();
-        console.log("Role: ", this.authService.getRole())
-        console.log("Is admin?: ", this.authService.isAdmin())
-        if(this.authService.isAdmin()){
-          this.router.navigate(["payment-method-dashboard"]);
-        }
-        else if(this.authService.isSuperAdmin()){
-          this.router.navigate(["merchant/register"]);
-        }
-        else{
-          this.router.navigate(["payment-method-config"]);
-        }
+        this.router.navigate(['/verify-code', loginDetails.email]);
       },
       error: (err: HttpErrorResponse) => {
         this.errorMessage = err.error?.message || "Greška prilikom prijave.";

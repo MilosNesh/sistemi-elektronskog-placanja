@@ -5,6 +5,7 @@ import { LoginDetails } from "../models/login-details.model"
 import { Observable, BehaviorSubject } from "rxjs"
 import { jwtDecode } from 'jwt-decode';
 import { enivironment } from "../../environments/environment";
+import { VerificationCode } from "../models/verification-code.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,10 @@ export class AuthService {
 
   public login(loginDetails: LoginDetails) : Observable<string> {
     return this.http.post(`${enivironment.backenUrl}/merchant/login`, loginDetails, {responseType: 'text'});
+  }
+
+  public verifyCode(verificationCode: VerificationCode) : Observable<string> {
+    return this.http.post(`${enivironment.backenUrl}/merchant/verify-mfa`, verificationCode, {responseType: 'text'});
   }
 
   public getToken() : string {

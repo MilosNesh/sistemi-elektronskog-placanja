@@ -4,9 +4,11 @@ package org.example.pspbackend.controller;
 import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.dto.LoginDetailsDTO;
 import org.example.pspbackend.dto.MerchantDTO;
+import org.example.pspbackend.dto.MfaVerificationDTO;
 import org.example.pspbackend.dto.RegisterMerchantDTO;
 import org.example.pspbackend.security.TokenUtil;
 import org.example.pspbackend.service.MerchantService;
+import org.example.pspbackend.service.impl.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @RestController
 @RequestMapping(value = "merchant", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -25,26 +29,59 @@ public class MerchantController {
     private MerchantService merchantService;
     @Autowired
     private TokenUtil tokenUtil;
+    @Autowired
+    private AuthService authService;
 
     @Value("${server.port}")
     private String port;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDetailsDTO loginDetailsDTO) {
-        Merchant merchant = merchantService.getByEmail(loginDetailsDTO.getEmail());
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginDetailsDTO loginDetailsDTO) {
+        Merchant merchant = merchantService.getByEmail(loginDetailsDTO.getEmail());
         if(merchant == null) {
             logger.warn("event=LOGIN | user={} | result=FAILURE | description=User not found", loginDetailsDTO.getEmail());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Merchant not found");
         }
-        if(!merchantService.login(loginDetailsDTO)) {
+
+        String loginResult = authService.processLogin(loginDetailsDTO);
+
+        if(loginResult.equals("INVALID_PASSWORD")) {
             logger.warn("event=LOGIN | user={} | result=FAILURE | description=Invalid password", loginDetailsDTO.getEmail());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
         }
-        logger.info("event=LOGIN | user={} | result=SUCCESS | description=User logged in", loginDetailsDTO.getEmail());
-        String jwt = tokenUtil.generateToken(merchant);
-        return ResponseEntity.ok(jwt);
+        if(loginResult.startsWith("LOCKED")) {
+            logger.warn("event=LOGIN | user={} | result=FAILURE | description=Account locked", loginDetailsDTO.getEmail());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Account locked");
+        }
+
+        if (merchantService.sendMfaEmail(merchant)) {
+            logger.info("event=MFA_SENT | user={} | result=SUCCESS | description=MFA code sent", loginDetailsDTO.getEmail());
+
+            // Vraćamo informaciju da je potreban kod
+            return ResponseEntity.ok(Map.of(
+                    "status", "MFA_REQUIRED",
+                    "email", merchant.getMerchantEmail()
+            ));
+        } else {
+            logger.error("event=MFA_SENT | user={} | result=FAILURE | description=Email service error", loginDetailsDTO.getEmail());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending MFA email. Please try again later.");
+        }
+    }
+
+    @PostMapping("/verify-mfa")
+    public ResponseEntity<?> verifyMfa(@RequestBody MfaVerificationDTO mfaDTO) {
+        Merchant merchant = merchantService.getByEmail(mfaDTO.getEmail());
+
+        if( merchantService.verifyCode(mfaDTO)){
+            logger.info("event=LOGIN | user={} | result=SUCCESS | description=User logged in via MFA", merchant.getMerchantEmail());
+            String jwt = tokenUtil.generateToken(merchant);
+            return ResponseEntity.ok(jwt);
+        }
+
+        logger.warn("event=MFA_VERIFY | user={} | result=FAILURE | description=Invalid code", mfaDTO.getEmail());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid MFA code");
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)

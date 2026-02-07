@@ -4,20 +4,20 @@ import org.example.pspbackend.domain.Merchant;
 import org.example.pspbackend.domain.MerchantPaymentMethod;
 import org.example.pspbackend.domain.PaymentMethod;
 import org.example.pspbackend.domain.Role;
-import org.example.pspbackend.dto.LoginDetailsDTO;
-import org.example.pspbackend.dto.MerchantDTO;
-import org.example.pspbackend.dto.MerchantPaymentMethodDTO;
-import org.example.pspbackend.dto.RegisterMerchantDTO;
+import org.example.pspbackend.dto.*;
 import org.example.pspbackend.repository.MerchantRepository;
 import org.example.pspbackend.repository.PaymentMethodRepository;
 import org.example.pspbackend.security.PasswordHasher;
 import org.example.pspbackend.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -27,6 +27,9 @@ public class MerchantServiceImpl implements MerchantService {
     private MerchantRepository merchantRepository;
     @Autowired
     private PaymentMethodRepository paymentMethodRepository;
+
+    @Autowired
+    private EmailServiceImpl emailService;
 
     public Merchant getById(Long id){
         return merchantRepository.findById(id).orElse(null);
@@ -140,4 +143,36 @@ public class MerchantServiceImpl implements MerchantService {
                 .map(merchant -> new MerchantDTO(merchant))
                 .toList();
     }
+
+    public boolean sendMfaEmail(Merchant merchant){
+        String code = String.format("%06d", new Random().nextInt(1000000));
+
+        merchant.setMfaCode(code);
+        merchantRepository.save(merchant);
+
+        try {
+            merchantRepository.save(merchant);
+            System.out.println("Mejl uspesno poslat: " + code + "  " + merchant.getMerchantEmail());
+            emailService.sendMfaCode(merchant.getMerchantEmail(), code);
+            return true;
+        } catch (Exception e) {
+            System.out.println("Mejl nije poslat");
+            return false;
+        }
+    }
+
+    public boolean verifyCode(MfaVerificationDTO mfaDTO){
+
+        Merchant merchant = merchantRepository.findByMerchantEmail(mfaDTO.getEmail());
+        if (merchant != null && mfaDTO.getCode().equals(merchant.getMfaCode())) {
+            merchant.setMfaCode(null);
+            merchantRepository.save(merchant);
+            System.out.println("Code successfuly verified");
+            return true;
+        }else{
+            System.out.println("Code not verified, code in database: " + merchant.getMfaCode() + ", received code: " + mfaDTO.getCode());
+            return false;
+        }
+    }
+
 }
