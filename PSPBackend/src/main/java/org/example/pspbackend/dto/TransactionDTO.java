@@ -10,8 +10,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class TransactionDTO {
     private String id;
     private Long merchantId;
@@ -21,4 +19,14 @@ public class TransactionDTO {
     private String merchantOrderId;
     private LocalDateTime pspTimestamp;
 
+    public TransactionDTO() {}
+    public TransactionDTO(String id, Long merchantId, double amount, String currency, LocalDateTime merchantTimestamp, String merchantOrderId, LocalDateTime pspTimestamp) {
+        this.id = id;
+        this.merchantId = merchantId;
+        this.amount = amount;
+        this.currency = currency;
+        this.merchantTimestamp = merchantTimestamp;
+        this.merchantOrderId = merchantOrderId;
+        this.pspTimestamp = pspTimestamp;
+    }
 }

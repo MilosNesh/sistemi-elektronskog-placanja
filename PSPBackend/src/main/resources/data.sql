@@ -1,11 +1,11 @@
 INSERT INTO public.merchants(
     port, merchant_id, merchant_email, error_url, failed_url, merchant_password, seller_url, success_url, role)
 VALUES (80, 1, 'cars@gmail.com',
-        'https://localhost:8444/payment/error',
-        'https://localhost:8444/payment/fail',
+        'https://host.minikube.internal:8444/payment/error',
+        'https://host.minikube.internal:8444/payment/fail',
         '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm',
         'https://localhost:4300/payment/',
-        'https://localhost:8444/payment/success',
+        'https://host.minikube.internal:8444/payment/success',
         'ROLE_MERCHANT')
     ON CONFLICT (merchant_id) DO NOTHING;
 

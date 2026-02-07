@@ -2,6 +2,7 @@ package org.example.pspbackend.config;
 
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -16,7 +17,6 @@ import java.security.cert.X509Certificate;
 
 @Configuration
 public class WebClientConfig {
-
     @Bean
     public WebClient webClient() throws Exception {
         // učitaj root CA crt iz resources
@@ -47,4 +47,17 @@ public class WebClientConfig {
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
+
+//    @Bean
+//    public WebClient webClient() {
+//        HttpClient httpClient = HttpClient.create()
+//                .secure(ssl -> ssl.sslContext(
+//                        SslContextBuilder.forClient()
+//                                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+//                ));
+//
+//        return WebClient.builder()
+//                .clientConnector(new ReactorClientHttpConnector(httpClient))
+//                .build();
+//    }
 }
