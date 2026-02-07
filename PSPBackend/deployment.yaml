@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: psp-backend-kontejner
-        image: psp-backend:5.1
+        image: psp-backend:6.0
         imagePullPolicy: Never
         ports:
         - containerPort: 8445
