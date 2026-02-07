@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: psp-backend-kontejner
-        image: psp-backend:6.0
+        image: psp-backend:5.3
         imagePullPolicy: Never
         ports:
         - containerPort: 8445
@@ -31,3 +31,10 @@ spec:
           value: "3ea43add55f94bf9bde36a8a36308ea8"
         - name: ETH_TEST_PRIVATE_KEY
           value: "0fb6ce15cadce429e7bd7579dfd393225ceae7a637f1c7bc459eb39022fb8c80"
+
+        volumeMounts:
+          - name: logs
+            mountPath: /logs
+      volumes:
+        - name: logs
+          emptyDir: {}

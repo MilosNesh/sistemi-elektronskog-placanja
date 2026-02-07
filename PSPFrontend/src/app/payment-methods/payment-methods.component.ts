@@ -34,6 +34,8 @@ export class PaymentMethodsComponent implements OnInit {
   btcAddress!: string;
   btcAmount!: string;
 
+  paymentLoading = false;
+
   constructor(
     private merchantService: MerchantService,
     private paymentMethodService: PaymentMethodService,
@@ -76,18 +78,23 @@ export class PaymentMethodsComponent implements OnInit {
       this.showCryptoModal = true;
       this.cryptoLoading = true;
       this.cryptoSuccess = false;
+    } else {
+      this.showCryptoModal = true;
+      this.paymentLoading = true;
     }
-    
+
     console.log('Selected payment method:', paymentMethod);
 
     this.paymentMethodService.selectPaymentMethod(paymentMethod, this.transactionId).subscribe({
       next: (response) => {
         console.log('Payment method sent to backend successfully, redirect url: ', response);
         window.location.href = response;
-        this.cryptoLoading = false;
+        this.paymentLoading = false;
+        this.showCryptoModal = false;
       },
       error: (err) => {
-        this.cryptoLoading = false;
+        this.showCryptoModal = false;
+        this.paymentLoading = false;
         console.error('Error sending payment method', err);
       }
     });

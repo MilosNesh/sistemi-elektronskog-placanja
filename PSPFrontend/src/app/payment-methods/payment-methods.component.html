@@ -29,6 +29,11 @@
       <div class="spinner"></div>
     </div>
 
+    <div *ngIf="paymentLoading">
+      <p>Processing your payment...</p>
+      <div class="spinner"></div>
+    </div>
+
     <div *ngIf="cryptoSuccess">
       <p>Payment successful!</p>
       <a [href]="'https://sepolia.etherscan.io/tx/' + cryptoTxHash" target="_blank">

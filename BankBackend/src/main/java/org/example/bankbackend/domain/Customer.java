@@ -25,6 +25,10 @@ public class Customer {
     @Column(length = 4, nullable = false)
     private String cardLast4;
 
+    public Long getId() {
+        return id;
+    }
+
     public Double getBalance() {
         return balance;
     }
