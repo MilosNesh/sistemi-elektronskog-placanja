@@ -152,8 +152,8 @@ public class MerchantServiceImpl implements MerchantService {
 
         try {
             merchantRepository.save(merchant);
-            System.out.println("Mejl uspesno poslat: " + code + "  " + merchant.getMerchantEmail());
             emailService.sendMfaCode(merchant.getMerchantEmail(), code);
+            System.out.println("Mejl uspesno poslat: " + code + "  " + merchant.getMerchantEmail());
             return true;
         } catch (Exception e) {
             System.out.println("Mejl nije poslat");

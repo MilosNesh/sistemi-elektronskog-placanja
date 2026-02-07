@@ -13,12 +13,19 @@ public class EmailServiceImpl {
     }
 
     public void sendMfaCode(String recipientEmail, String code) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(recipientEmail);
+//        message.setSubject("PSP Sistem - MFA Kod");
+//        message.setText("Vaš verifikacioni kod je: " + code);
+//
+//        System.out.println("Mejl je poslat");
+//        mailSender.send(message);
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("seps60781@gmail.com\n");
         message.setTo(recipientEmail);
-        message.setSubject("PSP Sistem - MFA Kod");
-        message.setText("Vaš verifikacioni kod je: " + code);
+        message.setSubject("Verification code");
+        message.setText(code);
 
-        System.out.println("Mejl je poslat");
         mailSender.send(message);
     }
 }
