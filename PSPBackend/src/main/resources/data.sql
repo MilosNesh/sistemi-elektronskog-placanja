@@ -4,7 +4,7 @@ VALUES (80, 1, 'cars@gmail.com',
         'https://host.minikube.internal:8444/payment/error',
         'https://host.minikube.internal:8444/payment/fail',
         '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm',
-        'https://host.minikube.internal:4300/payment/',
+        'https://localhost:4300/payment/',
         'https://host.minikube.internal:8444/payment/success',
         'ROLE_MERCHANT')
     ON CONFLICT (merchant_id) DO NOTHING;
