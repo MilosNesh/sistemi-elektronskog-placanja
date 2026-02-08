@@ -1,0 +1,28 @@
+<div class="mfa-container">
+    <div class="mfa-card">
+        <h2>Security Verification</h2>
+        <p>Enter the 6-digit code sent to your email.</p>
+
+        <div class="otp-wrapper">
+            <input type="text"
+                   class="hidden-input"
+                   maxlength="6"
+                   [(ngModel)]="fullCode"
+                   (input)="onInput()"
+                   inputmode="numeric"
+                   autocomplete="one-time-code"
+                   autofocus>
+
+            <div class="otp-display">
+                <div *ngFor="let digit of [0,1,2,3,4,5]"
+                     class="otp-box"
+                     [class.filled]="fullCode[digit]"
+                     [class.active]="fullCode.length === digit">
+                    {{ fullCode[digit] || '' }}
+                </div>
+            </div>
+        </div>
+
+        <button class="verify-btn" (click)="onSubmit()">Verify</button>
+    </div>
+</div>

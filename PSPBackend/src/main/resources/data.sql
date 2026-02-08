@@ -1,12 +1,16 @@
 INSERT INTO public.merchants(
-    port, merchant_id, merchant_email, error_url, failed_url, merchant_password, seller_url, success_url, role)
+    port, merchant_id, merchant_email, error_url, failed_url, merchant_password, seller_url, success_url, role,
+    failed_attempts, lock_until, mfa_code)
 VALUES (80, 1, 'cars@gmail.com',
         'https://host.minikube.internal:8444/payment/error',
         'https://host.minikube.internal:8444/payment/fail',
-        '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm',
+        '$2a$12$vqucDycnkT51NuOTnVWtfuAmKHCdIIQmCn3G.fYCMIFFyXUdyekLe',
         'https://localhost:4300/payment/',
         'https://host.minikube.internal:8444/payment/success',
-        'ROLE_MERCHANT')
+        'ROLE_MERCHANT',
+        0,
+        NULL,
+        NULL)
     ON CONFLICT (merchant_id) DO NOTHING;
 
 INSERT INTO public.merchants(
@@ -14,14 +18,17 @@ INSERT INTO public.merchants(
     merchant_email,
     merchant_password,
     role,
-    port, error_url, failed_url, seller_url, success_url
+    port, error_url, failed_url, seller_url, success_url, failed_attempts, lock_until, mfa_code
 )
 VALUES (
            2,
-           'markopetr@gmail.com',
-           '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm', -- ista lozinka kao za merchant
+           'markopetr062@gmail.com',
+           '$2a$12$vqucDycnkT51NuOTnVWtfuAmKHCdIIQmCn3G.fYCMIFFyXUdyekLe', -- ista lozinka kao za merchant
            'ROLE_ADMIN',
-           NULL, NULL, NULL, NULL, NULL
+           NULL, NULL, NULL, NULL, NULL,
+           0,
+           NULL,
+           NULL
        ) ON CONFLICT (merchant_id) DO NOTHING;
 
 INSERT INTO public.merchants(
@@ -29,14 +36,17 @@ INSERT INTO public.merchants(
     merchant_email,
     merchant_password,
     role,
-    port, error_url, failed_url, seller_url, success_url
+    port, error_url, failed_url, seller_url, success_url, failed_attempts, lock_until, mfa_code
 )
 VALUES (
            3,
            'peraperic@gmail.com',
-           '$2a$12$vMJga57Pqt4ZwktqirCGF.MUaVR0Fi4l8EUlSOqu05zUylEwlPTrm', -- ista lozinka kao za merchant
+           '$2a$12$vqucDycnkT51NuOTnVWtfuAmKHCdIIQmCn3G.fYCMIFFyXUdyekLe', -- ista lozinka kao za merchant
            'ROLE_SUPERADMIN',
-           NULL, NULL, NULL, NULL, NULL
+           NULL, NULL, NULL, NULL, NULL,
+        0,
+           NULL,
+           NULL
        ) ON CONFLICT (merchant_id) DO NOTHING;;
 
 SELECT setval('merchants_merchant_id_seq', (SELECT MAX(merchant_id) FROM merchants));

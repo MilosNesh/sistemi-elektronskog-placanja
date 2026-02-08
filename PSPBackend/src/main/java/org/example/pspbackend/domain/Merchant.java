@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.example.pspbackend.dto.MerchantDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,20 @@ public class Merchant {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
+    @Column(name = "mfa_code")
+    private String mfaCode;
+
+    @Column(name = "failed_attempts", nullable = false)
+    private int failedAttempts = 0;
+
+    @Column(name = "lock_until")
+    private LocalDateTime lockUntil;
+
+    public boolean isAccountLocked() {
+        if (this.lockUntil == null) return false;
+        return this.lockUntil.isAfter(LocalDateTime.now());
+    }
 
     public Merchant() {}
 
