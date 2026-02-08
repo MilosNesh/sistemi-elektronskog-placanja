@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: psp-backend-kontejner
-        image: psp-backend:5.3
+        image: psp-backend:5.5
         imagePullPolicy: Never
         ports:
         - containerPort: 8445
@@ -22,9 +22,9 @@ spec:
         - name: PSP_SHARED_SECRET
           value: "psp-bank-secret"
         - name: PAYPAL_CLIENT_ID
-          value: "Ab-tPVVIP_fa-9avPLHG1Y_c5kt_fDBC0B5hWSOMZylIoI9ocN7HPwF5o0wqvWcf2_JPwWPd6tuVSiYo"
+          value: "AfwHmxRWC1IXO5KOY2ddfB-zqsuTLQMDmdRnzlcH3twm4df88iq2PoSvW4jDDHQNKQsA1IqM8sgg190m"
         - name: PAYPAL_CLIENT_SECRET
-          value: "EAT2BMoaYCNe0-ZkHeORlqA2hNwm2Dxw_Mt9_iIMXdHWT4luooCqdksh2mHEY5IsTA-xThJ2VB3uAbZm"
+          value: "EIJ0GKuL46hTxWEHjrQkgoxGzz3ge18e6DJrsh7DcnI2dOZxjVVQtOxIwWe4qlCrNyS7YnAirx6eJAF3"
         - name: CURRENCY_FREAKS_API_KEY
           value: "b7cdfa36fea8451fafe0d15071a4386e"
         - name: INFURA_PROJECT_ID

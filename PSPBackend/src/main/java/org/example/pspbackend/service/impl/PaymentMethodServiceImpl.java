@@ -7,6 +7,7 @@ import org.example.pspbackend.service.PaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,16 +42,19 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 
     public List<PaymentMethodDTO> getByMerchantId(Long id){
         List<PaymentMethod> methods = paymentMethodRepository.findByMerchantId(id);
+        List<PaymentMethodDTO> methodDTOS = new ArrayList<>();
 
-        return methods.stream()
-                .map(pm -> new PaymentMethodDTO(
-                        pm.getPaymentMethodId(),
+        for(var pm: methods){
+            if(pm.getIsAvailable()){
+                methodDTOS.add(new PaymentMethodDTO(  pm.getPaymentMethodId(),
                         pm.getType(),
                         pm.getImage(),
                         pm.getDescription(),
-                        pm.getIsAvailable()
-                ))
-                .toList();
+                        pm.getIsAvailable()));
+            }
+        }
+
+        return methodDTOS;
     }
 
     public PaymentMethodDTO save(PaymentMethodDTO paymentMethodDTO) {

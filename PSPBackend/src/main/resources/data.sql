@@ -1,7 +1,7 @@
 INSERT INTO public.merchants(
     port, merchant_id, merchant_email, error_url, failed_url, merchant_password, seller_url, success_url, role,
     failed_attempts, lock_until, mfa_code)
-VALUES (80, 1, 'cars@gmail.com',
+VALUES (80, 1, 'onlybuns1@gmail.com',
         'https://host.minikube.internal:8444/payment/error',
         'https://host.minikube.internal:8444/payment/fail',
         '$2a$12$vqucDycnkT51NuOTnVWtfuAmKHCdIIQmCn3G.fYCMIFFyXUdyekLe',
@@ -40,7 +40,7 @@ INSERT INTO public.merchants(
 )
 VALUES (
            3,
-           'peraperic@gmail.com',
+           'nenaddubovac056@gmail.com',
            '$2a$12$vqucDycnkT51NuOTnVWtfuAmKHCdIIQmCn3G.fYCMIFFyXUdyekLe', -- ista lozinka kao za merchant
            'ROLE_SUPERADMIN',
            NULL, NULL, NULL, NULL, NULL,
@@ -56,7 +56,7 @@ INSERT INTO public.payment_methods(
 VALUES
     (1, 'CREDIT_CARD', '/images/credit-card.png', 'Pay with Visa, Master Card', true),
     (2, 'QR_CODE', '/images/qrcode.png', 'Instant pay', true),
-    (3, 'CRYPTO', '/images/crypto.png', 'Pay with Bitcoin', true),
+    (3, 'CRYPTO', '/images/ethereum.png', 'Pay with Ethereum', true),
     (4, 'PAYPAL', '/images/paypal.png', 'Pay with PayPal', false);
 
 
